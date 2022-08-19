@@ -258,8 +258,225 @@ if (empty($list_instructor)) {
     <h1><?php echo get_admin_page_title(); ?></h1>
 
     <br><br>
+    <!-------LISTA DE EVENTOS ACTIVOS--------->
     <h1 class="wp-heading-inline">Lista de eventos</h1>
     <a type="button" data-bs-toggle="modal" data-bs-target="#addEvent" class="page-title-action">Añadir nuevo evento</a>
+
+    <table class="wp-list-table widefat fixed striped pages">
+        <thead>
+            <th>Imagen</th>
+            <th>Nombre del evento</th>
+            <th>Fecha y hora</th>
+            <th>Duración</th>
+            <th>Evento Id</th>
+            <th>Instructor</th>
+            <th>Inscripciones</th>
+            <th>Acciones</th>
+        </thead>
+        <tbody id="the-list">
+
+            <?php
+            $today = new DateTime();
+            foreach ($list_shedule as $key => $value) {
+
+                $eventoid = $value['eventoid'];
+                $nombre = $value['nombre'];
+                $imageLink = $value['imageLink'];
+                $fechahorainicio = $value['fechahorainicio'];
+                $fechahorafin = $value['fechahorafin'];
+                $instructorIdAssign = $value['instructorIdAssign'];
+                $descripcion = $value['descripcion'];
+                $shortcode = $value['shortcode'];
+                $linkevent = $value['linkevent'];
+                $linkcalendar = $value['linkcalendar'];
+                $timestamp = $value['timestamp'];
+
+                $fechahorainicio = new DateTime($fechahorainicio);
+                $fechahorafin = new DateTime($fechahorafin);
+
+                $duracion = $fechahorainicio->diff($fechahorafin);
+                if ($fechahorainicio >= $today) {
+            ?>
+
+                    <tr>
+                        <td>
+                            <?php if (isset($imageLink) && $imageLink != '') { ?>
+                                <img src='<?php echo $imageLink; ?>' width='80px' height='50px'>
+                            <?php } ?>
+                        </td>
+                        <td><?php echo $nombre; ?></td>
+                        <td><?php echo $fechahorainicio->format('d/m/Y h:i'); ?></td>
+                        <td><?php
+
+                            if ($duracion->y == 1) {
+                                echo $duracion->y . " año ";
+                            } else if ($duracion->y > 1) {
+                                echo $duracion->y . " años ";
+                            }
+
+                            if ($duracion->m == 1) {
+                                echo $duracion->m . " mes ";
+                            } else if ($duracion->m > 1) {
+                                echo $duracion->m . " meses ";
+                            }
+
+                            if ($duracion->d == 1) {
+                                echo $duracion->d . " día ";
+                            } else if ($duracion->d > 1) {
+                                echo $duracion->d . " dias ";
+                            }
+
+                            if ($duracion->h == 1) {
+                                echo $duracion->h . " hora ";
+                            } else if ($duracion->h > 1) {
+                                echo $duracion->h . " horas ";
+                            }
+
+                            if ($duracion->i == 1) {
+                                echo $duracion->i . " minuto ";
+                            } else if ($duracion->i > 1) {
+                                echo $duracion->i . " minutos ";
+                            }
+
+
+                            ?>
+                        </td>
+                        <td><?php echo $eventoid; ?></td>
+
+                        <td>
+                            <?php foreach ($list_instructor as $key => $value) { ?>
+
+                                <?php if ($value['instructorid'] == $instructorIdAssign) {
+                                    echo $value['nombre'];
+                                } ?>
+
+                            <?php } ?>
+                        </td>
+
+                        <td><?php echo "2"; ?></td>
+
+                        <td>
+                            <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
+                            <a data-bs-toggle="modal" data-bs-target="#editEvent<?php echo $eventoid; ?>" class='page-title-action'>Editar</a>
+                            <a data-bs-toggle="modal" data-bs-target="#deleteshedulemodal<?php echo $eventoid; ?>" class='page-title-action'>Borrar</a>
+                        </td>
+                    </tr>
+
+                    <!-- Modal delete shedule -->
+                    <div class="modal" id="deleteshedulemodal<?php echo $eventoid; ?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Evento: <?php echo $nombre; ?></h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    ¿Segur@ que quieres eliminar este evento?
+                                    <a id="deleteshedule" data-idshedule='<?php echo $eventoid; ?>' class="btn btn-danger" class='page-title-action'>ELIMINAR</a>
+                                    <br> Puede tardar un rato.
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!----------->
+
+                    <!---MODAL EDIT EVENT--->
+                    <div class="modal fade" id="editEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar evento</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <form method="post">
+
+                                    <div class="modal-body">
+                                        <div class="w-100">
+                                            <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='100px' width='100%' class="mb-2">
+                                            <input id="upload-button3" type="button" class="button btn btn-primary" value="Cambiar imagen" />
+                                            <input id="image-url3" type="hidden" name="image-url3" value="<?php echo $imageLink; ?>" maxlength="250" />
+                                        </div>
+
+                                        <input id="eventid-edit" type="hidden" name="eventid-edit" value="<?php echo $eventoid; ?>" />
+
+                                        <div class="mb-3 mt-3">
+                                            <label for="eventname-edit" class="form-label">Nombre del evento:</label>
+                                            <input type="text" class="form-control" id="eventname-edit" value="<?php echo $nombre; ?>" name="eventname-edit" maxlength='45' required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="fechahorainicio-edit" class="form-label">Fecha y hora de inicio:</label>
+                                            <input type="datetime-local" id="fechahorainicio-edit" name="fechahorainicio-edit" value="<?php echo $fechahorainicio->format('Y-m-d H:i'); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="fechahorafin-edit" class="form-label">Fecha y hora de finalización:</label>
+                                            <input type="datetime-local" id="fechahorafin-edit" name="fechahorafin-edit" value="<?php echo $fechahorafin->format('Y-m-d H:i'); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="instructor-edit" class="form-label">Instructor:</label>
+                                            <select class="form-select" id="instructor-edit" name="instructor-edit[]" required>
+                                                <?php
+                                                foreach ($list_instructor as $key => $value) {
+                                                    if ($instructorIdAssign == $value['instructorid']) {
+                                                ?>
+
+                                                        <option value="<?php echo $value['instructorid']; ?>" selected>
+                                                            <?php echo $value['nombre']; ?></option>
+
+                                                    <?php } else { ?>
+
+                                                        <option value="<?php echo $value['instructorid']; ?>">
+                                                            <?php echo $value['nombre']; ?></option>
+
+                                                <?php }
+                                                } ?>
+
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcion-edit">Descripción:</label>
+                                            <textarea class="form-control" rows="5" id="descripcion-edit" name="descripcion-edit" maxlength="500"><?php echo $descripcion; ?></textarea>
+                                        </div>
+                                        <div class="mb-3 mt-3">
+                                            <label for="linkevent-edit" class="form-label">Link del evento:</label>
+                                            <input type="text" class="form-control" id="linkevent-edit" value="<?php echo $linkevent; ?>" name="linkevent-edit" maxlength='250'>
+                                        </div>
+                                        <div class="mb-3 mt-3">
+                                            <label for="linkcalendar-edit" class="form-label">Link del calendario:</label>
+                                            <input type="text" class="form-control" id="linkcalendar-edit" value="<?php echo $linkcalendar; ?>" name="linkcalendar-edit" maxlength='250'>
+                                        </div>
+                                        <br>
+                                        <div class="w-100 text-center">
+                                            <button id="editshedule" name="editshedule" type="submit" class="btn btn-primary">Editar</button>
+                                        </div>
+                                        <br>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
+
+
+            <?php }
+            } ?>
+
+
+        </tbody>
+    </table>
+    <!------------------------------>
+
+    <!-------LISTA DE EVENTOS EXPIRADOS--------->
+    <h1 class="wp-heading-inline">Eventos expirados</h1>
 
     <table class="wp-list-table widefat fixed striped pages">
         <thead>
@@ -293,182 +510,185 @@ if (empty($list_instructor)) {
                 $fechahorafin = new DateTime($fechahorafin);
 
                 $duracion = $fechahorainicio->diff($fechahorafin);
+                if ($fechahorainicio < $today) {
             ?>
 
-                <tr>
-                    <td>
-                        <?php if (isset($imageLink) && $imageLink != '') { ?>
-                            <img src='<?php echo $imageLink; ?>' width='50px' height='50px'>
-                        <?php } ?>
-                    </td>
-                    <td><?php echo $nombre; ?></td>
-                    <td><?php echo $fechahorainicio->format('d/m/Y h:i'); ?></td>
-                    <td><?php
+                    <tr>
+                        <td>
+                            <?php if (isset($imageLink) && $imageLink != '') { ?>
+                                <img src='<?php echo $imageLink; ?>' width='80px' height='50px'>
+                            <?php } ?>
+                        </td>
+                        <td><?php echo $nombre; ?></td>
+                        <td><?php echo $fechahorainicio->format('d/m/Y h:i'); ?></td>
+                        <td><?php
 
-                        if ($duracion->y == 1) {
-                            echo $duracion->y . " año ";
-                        } else if ($duracion->y > 1) {
-                            echo $duracion->y . " años ";
-                        }
+                            if ($duracion->y == 1) {
+                                echo $duracion->y . " año ";
+                            } else if ($duracion->y > 1) {
+                                echo $duracion->y . " años ";
+                            }
 
-                        if ($duracion->m == 1) {
-                            echo $duracion->m . " mes ";
-                        } else if ($duracion->m > 1) {
-                            echo $duracion->m . " meses ";
-                        }
+                            if ($duracion->m == 1) {
+                                echo $duracion->m . " mes ";
+                            } else if ($duracion->m > 1) {
+                                echo $duracion->m . " meses ";
+                            }
 
-                        if ($duracion->d == 1) {
-                            echo $duracion->d . " día ";
-                        } else if ($duracion->d > 1) {
-                            echo $duracion->d . " dias ";
-                        }
+                            if ($duracion->d == 1) {
+                                echo $duracion->d . " día ";
+                            } else if ($duracion->d > 1) {
+                                echo $duracion->d . " dias ";
+                            }
 
-                        if ($duracion->h == 1) {
-                            echo $duracion->h . " hora ";
-                        } else if ($duracion->h > 1) {
-                            echo $duracion->h . " horas ";
-                        }
+                            if ($duracion->h == 1) {
+                                echo $duracion->h . " hora ";
+                            } else if ($duracion->h > 1) {
+                                echo $duracion->h . " horas ";
+                            }
 
-                        if ($duracion->i == 1) {
-                            echo $duracion->i . " minuto ";
-                        } else if ($duracion->i > 1) {
-                            echo $duracion->i . " minutos ";
-                        }
+                            if ($duracion->i == 1) {
+                                echo $duracion->i . " minuto ";
+                            } else if ($duracion->i > 1) {
+                                echo $duracion->i . " minutos ";
+                            }
 
 
-                        ?>
-                    </td>
-                    <td><?php echo $eventoid; ?></td>
+                            ?>
+                        </td>
+                        <td><?php echo $eventoid; ?></td>
 
-                    <td>
-                        <?php foreach ($list_instructor as $key => $value) { ?>
+                        <td>
+                            <?php foreach ($list_instructor as $key => $value) { ?>
 
-                            <?php if ($value['instructorid'] == $instructorIdAssign) {
-                                echo $value['nombre'];
-                            } ?>
+                                <?php if ($value['instructorid'] == $instructorIdAssign) {
+                                    echo $value['nombre'];
+                                } ?>
 
-                        <?php } ?>
-                    </td>
+                            <?php } ?>
+                        </td>
 
-                    <td><?php echo "2"; ?></td>
+                        <td><?php echo "2"; ?></td>
 
-                    <td>
-                        <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
-                        <a data-bs-toggle="modal" data-bs-target="#editEvent<?php echo $eventoid; ?>" class='page-title-action'>Editar</a>
-                        <a data-bs-toggle="modal" data-bs-target="#deleteshedulemodal<?php echo $eventoid; ?>" class='page-title-action'>Borrar</a>
-                    </td>
-                </tr>
+                        <td>
+                            <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
+                            <a data-bs-toggle="modal" data-bs-target="#editEvent<?php echo $eventoid; ?>" class='page-title-action'>Editar</a>
+                            <a data-bs-toggle="modal" data-bs-target="#deleteshedulemodal<?php echo $eventoid; ?>" class='page-title-action'>Borrar</a>
+                        </td>
+                    </tr>
 
-                <!-- Modal delete shedule -->
-                <div class="modal" id="deleteshedulemodal<?php echo $eventoid; ?>">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                    <!-- Modal delete shedule -->
+                    <div class="modal" id="deleteshedulemodal<?php echo $eventoid; ?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h4 class="modal-title">Evento: <?php echo $nombre; ?></h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                ¿Segur@ que quieres eliminar este evento?
-                                <a id="deleteshedule" data-idshedule='<?php echo $eventoid; ?>' class="btn btn-danger" class='page-title-action'>ELIMINAR</a>
-                                <br> Puede tardar un rato.
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!----------->
-
-                <!---MODAL EDIT EVENT--->
-                <div class="modal fade" id="editEvent<?php echo $eventoid; ?>">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-                                <h4 class="modal-title">Editar evento</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-
-                            <form method="post">
-
-                                <div class="modal-body">
-                                    <div class="w-100">
-                                        <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='100px' width='100%' class="mb-2">
-                                        <input id="upload-button3" type="button" class="button btn btn-primary" value="Cambiar imagen" />
-                                        <input id="image-url3" type="hidden" name="image-url3" value="<?php echo $imageLink; ?>" maxlength="250" />
-                                    </div>
-
-                                    <input id="eventid-edit" type="hidden" name="eventid-edit" value="<?php echo $eventoid; ?>" />
-
-                                    <div class="mb-3 mt-3">
-                                        <label for="eventname-edit" class="form-label">Nombre del evento:</label>
-                                        <input type="text" class="form-control" id="eventname-edit" value="<?php echo $nombre; ?>" name="eventname-edit" maxlength='45' required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="fechahorainicio-edit" class="form-label">Fecha y hora de inicio:</label>
-                                        <input type="datetime-local" id="fechahorainicio-edit" name="fechahorainicio-edit" value="<?php echo $fechahorainicio->format('Y-m-d H:i'); ?>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="fechahorafin-edit" class="form-label">Fecha y hora de finalización:</label>
-                                        <input type="datetime-local" id="fechahorafin-edit" name="fechahorafin-edit" value="<?php echo $fechahorafin->format('Y-m-d H:i'); ?>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="instructor-edit" class="form-label">Instructor:</label>
-                                        <select class="form-select" id="instructor-edit" name="instructor-edit[]" required>
-                                            <?php
-                                            foreach ($list_instructor as $key => $value) {
-                                                if ($instructorIdAssign == $value['instructorid']) {
-                                            ?>
-
-                                                    <option value="<?php echo $value['instructorid']; ?>" selected>
-                                                        <?php echo $value['nombre']; ?></option>
-
-                                                <?php } else { ?>
-
-                                                    <option value="<?php echo $value['instructorid']; ?>">
-                                                        <?php echo $value['nombre']; ?></option>
-
-                                            <?php }
-                                            } ?>
-
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="descripcion-edit">Descripción:</label>
-                                        <textarea class="form-control" rows="5" id="descripcion-edit" name="descripcion-edit" maxlength="500"><?php echo $descripcion; ?></textarea>
-                                    </div>
-                                    <div class="mb-3 mt-3">
-                                        <label for="linkevent-edit" class="form-label">Link del evento:</label>
-                                        <input type="text" class="form-control" id="linkevent-edit" value="<?php echo $linkevent; ?>" name="linkevent-edit" maxlength='250'>
-                                    </div>
-                                    <div class="mb-3 mt-3">
-                                        <label for="linkcalendar-edit" class="form-label">Link del calendario:</label>
-                                        <input type="text" class="form-control" id="linkcalendar-edit" value="<?php echo $linkcalendar; ?>" name="linkcalendar-edit" maxlength='250'>
-                                    </div>
-                                    <br>
-                                    <div class="w-100 text-center">
-                                        <button id="editshedule" name="editshedule" type="submit" class="btn btn-primary">Editar</button>
-                                    </div>
-                                    <br>
-
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Evento: <?php echo $nombre; ?></h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
 
-                            </form>
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    ¿Segur@ que quieres eliminar este evento?
+                                    <a id="deleteshedule" data-idshedule='<?php echo $eventoid; ?>' class="btn btn-danger" class='page-title-action'>ELIMINAR</a>
+                                    <br> Puede tardar un rato.
+                                </div>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-------------->
+                    <!----------->
+
+                    <!---MODAL EDIT EVENT--->
+                    <div class="modal fade" id="editEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar evento</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <form method="post">
+
+                                    <div class="modal-body">
+                                        <div class="w-100">
+                                            <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='100px' width='100%' class="mb-2">
+                                            <input id="upload-button3" type="button" class="button btn btn-primary" value="Cambiar imagen" />
+                                            <input id="image-url3" type="hidden" name="image-url3" value="<?php echo $imageLink; ?>" maxlength="250" />
+                                        </div>
+
+                                        <input id="eventid-edit" type="hidden" name="eventid-edit" value="<?php echo $eventoid; ?>" />
+
+                                        <div class="mb-3 mt-3">
+                                            <label for="eventname-edit" class="form-label">Nombre del evento:</label>
+                                            <input type="text" class="form-control" id="eventname-edit" value="<?php echo $nombre; ?>" name="eventname-edit" maxlength='45' required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="fechahorainicio-edit" class="form-label">Fecha y hora de inicio:</label>
+                                            <input type="datetime-local" id="fechahorainicio-edit" name="fechahorainicio-edit" value="<?php echo $fechahorainicio->format('Y-m-d H:i'); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="fechahorafin-edit" class="form-label">Fecha y hora de finalización:</label>
+                                            <input type="datetime-local" id="fechahorafin-edit" name="fechahorafin-edit" value="<?php echo $fechahorafin->format('Y-m-d H:i'); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="instructor-edit" class="form-label">Instructor:</label>
+                                            <select class="form-select" id="instructor-edit" name="instructor-edit[]" required>
+                                                <?php
+                                                foreach ($list_instructor as $key => $value) {
+                                                    if ($instructorIdAssign == $value['instructorid']) {
+                                                ?>
+
+                                                        <option value="<?php echo $value['instructorid']; ?>" selected>
+                                                            <?php echo $value['nombre']; ?></option>
+
+                                                    <?php } else { ?>
+
+                                                        <option value="<?php echo $value['instructorid']; ?>">
+                                                            <?php echo $value['nombre']; ?></option>
+
+                                                <?php }
+                                                } ?>
+
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcion-edit">Descripción:</label>
+                                            <textarea class="form-control" rows="5" id="descripcion-edit" name="descripcion-edit" maxlength="500"><?php echo $descripcion; ?></textarea>
+                                        </div>
+                                        <div class="mb-3 mt-3">
+                                            <label for="linkevent-edit" class="form-label">Link del evento:</label>
+                                            <input type="text" class="form-control" id="linkevent-edit" value="<?php echo $linkevent; ?>" name="linkevent-edit" maxlength='250'>
+                                        </div>
+                                        <div class="mb-3 mt-3">
+                                            <label for="linkcalendar-edit" class="form-label">Link del calendario:</label>
+                                            <input type="text" class="form-control" id="linkcalendar-edit" value="<?php echo $linkcalendar; ?>" name="linkcalendar-edit" maxlength='250'>
+                                        </div>
+                                        <br>
+                                        <div class="w-100 text-center">
+                                            <button id="editshedule" name="editshedule" type="submit" class="btn btn-primary">Editar</button>
+                                        </div>
+                                        <br>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
 
 
-            <?php } ?>
+            <?php }
+            } ?>
 
 
         </tbody>
     </table>
+    <!------------------------------>
 
     <br><br>
 
@@ -623,7 +843,7 @@ if (empty($list_instructor)) {
 
                     <div class="modal-body">
                         <div class="w-100">
-                            <img id='image-preview-event' src='<?php echo plugin_dir_url(__FILE__) . "img/fondocolores.jpg"; ?>' height='100px' width='100%' class="mb-2">
+                            <img id='image-preview-event' src='<?php echo plugin_dir_url(__FILE__) . "img/fondocolores.jpg"; ?>' height='270px' width='100%' class="mb-2">
                             <input id="upload-button" type="button" class="button btn btn-primary" value="Cambiar imagen" />
                             <input id="image-url" type="hidden" name="image-url" value="<?php echo plugin_dir_url(__FILE__) . 'img/fondocolores.jpg'; ?>" maxlength="250" />
                         </div>

@@ -28,7 +28,7 @@
             return $data[0];
         }
 
-        public function eventFromOpen($id,$nombre,$imageLink,$fechahorainicio,$fechahorafin,$nombreInstructor,$imageLinkInstructor,$descripcion,$linkevent,$timestamp){
+        public function eventFromOpen($id,$nombre,$imageLink,$fechahorainicio,$fechahorafin,$nombreInstructor,$imageLinkInstructor,$descripcion,$linkevent,$linkcalendar,$timestamp){
 
 
             $date =  date("l d F Y", strtotime($fechahorainicio));
@@ -42,14 +42,18 @@
                         <p>$date</p>
                         <p>$hour</p>
                         <div style='display:flex;align-items:center;'>
-                            <img src='$imageLinkInstructor' width='40px' height='40px' style='border-radius:50%;margin-right:10px;'>
+                            <img src='$imageLinkInstructor' width='40px' height='40px' style='border-radius:50%;margin-right:10px;margin-bottom:18px;'>
                             <p>$nombreInstructor</p>
                         </div>
                         <p>$descripcion</p>
                         <br>
                         <div>
-                            <button class='btn'>inscribirme</button>
-                            <button class='btn'>agregar a calendario</button>
+                            <a href='$linkevent'>
+                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
+                            </a>
+                            <a href='$linkcalendar'>
+                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
+                            </a>
                         </div>
                         <br>
                     </div>
@@ -78,13 +82,14 @@
             $descripcion = $e['descripcion'];
             $linkevent = $e['linkevent'];
             $timestamp = $e['timestamp'];
+            $linkcalendar = $e['linkcalendar'];
 
             $i = $this->getInstructors($instructorIdAssign);
 
             $nombreInstructor = $i['nombre'];
             $imageLinkInstructor = $i['imageLink'];
 
-            $html = $this->eventFromOpen($id, $nombre, $imageLink, $fechahorainicio, $fechahorafin, $nombreInstructor, $imageLinkInstructor, $descripcion, $linkevent, $timestamp);
+            $html = $this->eventFromOpen($id, $nombre, $imageLink, $fechahorainicio, $fechahorafin, $nombreInstructor, $imageLinkInstructor, $descripcion, $linkevent, $linkcalendar,$timestamp);
             $html .= $this->eventFromClose();
 
             return $html;

@@ -28,8 +28,8 @@
                         <br>
                         <div>
                             <a href='$linkcategoria'>
-                                <button class='btn'>Ver clases</button>
-                            </a> 
+                                <button class='btn'style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>registrarme</button>
+                            </a>
                             <a href='$instagramLink'>
                                 <i class='fa-brands fa-instagram'></i>
                             </a>
