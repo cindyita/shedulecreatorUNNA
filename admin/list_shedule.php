@@ -146,8 +146,8 @@ if (isset($_POST['editshedule'])) {
 
     $name_e = $_POST['eventname-edit'];
 
-    if ($_POST['image-url-edit']) {
-        $imageurl_e = $_POST['image-url-edit'] . '';
+    if ($_POST['image-url3']) {
+        $imageurl_e = $_POST['image-url3'] . '';
     } else {
         $imageurl_e = '';
     }
@@ -174,7 +174,7 @@ if (isset($_POST['editshedule'])) {
 
     try {
 
-        $wpdb->update($tabla_shedule, $dataedit, array('eventid' => $eventidedit));
+        $wpdb->update($tabla_shedule, $dataedit, array('eventoid' => $eventidedit));
     } catch (Exception $e) {
 
         echo '<div id="error-alert" class="alert alert-danger alert-dismissible me-4 mt-4">
@@ -185,14 +185,63 @@ if (isset($_POST['editshedule'])) {
 
     echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    <strong>éxito!</strong> Se ha agregado el evento
+    <strong>éxito!</strong> Se ha editado el evento
+    </div>';
+}
+
+if (isset($_POST['editinstructor'])) {
+
+    $instructorid_ie = $_POST['instructorid'];
+    $name_ie = $_POST['nameinstructor-edit'];
+
+    if ($_POST['image-url4']) {
+        $imageurl_ie = $_POST['image-url4'] . '';
+    } else {
+        $imageurl_ie = '';
+    }
+
+    $cargo_ie = $_POST['cargo-edit'];
+    $linkInstagram_ie = $_POST['linkInstagram-edit'];
+
+    $whatsapp_ie = $_POST['whatsapp-edit'];
+
+    $descripcion2_ie = $_POST['descripcion3'];
+    $linkcategoria_ie = $_POST['linkcategoria-edit'];
+
+
+    $dataedit2 = array(
+        'nombre' => $name_ie,
+        'cargo' => $cargo_ie,
+        'imageLink' => $imageurl_ie,
+        'descripcion' => $descripcion2_ie,
+        'instagramLink' => $linkInstagram_ie,
+        'whatsapp' => $whatsapp_ie,
+        'linkcategoria' => $linkcategoria_ie,
+    );
+
+    try {
+
+        $wpdb->update($tabla_instructor, $dataedit2, array('instructorid' => $instructorid_ie));
+    } catch (Exception $e) {
+
+        echo '<div id="error-alert" class="alert alert-danger alert-dismissible me-4 mt-4">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>ERROR</strong> ' . $e->getMessage() . '
+        </div>';
+    }
+
+    echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>éxito!</strong> Se ha editado el instructor
     </div>';
 }
 
 $query = "SELECT * FROM $tabla_shedule";
+global $list_shedule;
 $list_shedule = $wpdb->get_results($query, ARRAY_A);
 
 $query2 = "SELECT * FROM $tabla_instructor";
+global $list_instructor;
 $list_instructor = $wpdb->get_results($query2, ARRAY_A);
 
 if (empty($list_shedule)) {
@@ -220,6 +269,7 @@ if (empty($list_instructor)) {
             <th>Duración</th>
             <th>Evento Id</th>
             <th>Instructor</th>
+            <th>Inscripciones</th>
             <th>Acciones</th>
         </thead>
         <tbody id="the-list">
@@ -300,7 +350,10 @@ if (empty($list_instructor)) {
                         <?php } ?>
                     </td>
 
+                    <td><?php echo "2"; ?></td>
+
                     <td>
+                        <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
                         <a data-bs-toggle="modal" data-bs-target="#editEvent<?php echo $eventoid; ?>" class='page-title-action'>Editar</a>
                         <a data-bs-toggle="modal" data-bs-target="#deleteshedulemodal<?php echo $eventoid; ?>" class='page-title-action'>Borrar</a>
                     </td>
@@ -344,8 +397,8 @@ if (empty($list_instructor)) {
                                 <div class="modal-body">
                                     <div class="w-100">
                                         <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='100px' width='100%' class="mb-2">
-                                        <input id="upload-button-edit" type="button" class="button btn btn-primary" value="Cambiar imagen" />
-                                        <input id="image-url-edit" type="hidden" name="image-url-edit" value="<?php echo $imageLink; ?>" maxlength="250" />
+                                        <input id="upload-button3" type="button" class="button btn btn-primary" value="Cambiar imagen" />
+                                        <input id="image-url3" type="hidden" name="image-url3" value="<?php echo $imageLink; ?>" maxlength="250" />
                                     </div>
 
                                     <input id="eventid-edit" type="hidden" name="eventid-edit" value="<?php echo $eventoid; ?>" />
@@ -356,11 +409,11 @@ if (empty($list_instructor)) {
                                     </div>
                                     <div class="mb-3">
                                         <label for="fechahorainicio-edit" class="form-label">Fecha y hora de inicio:</label>
-                                        <input type="datetime-local" id="fechahorainicio-edit" name="fechahorainicio-edit" value="<?php echo $fechahorainicio; ?>" required>
+                                        <input type="datetime-local" id="fechahorainicio-edit" name="fechahorainicio-edit" value="<?php echo $fechahorainicio->format('Y-m-d H:i'); ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="fechahorafin-edit" class="form-label">Fecha y hora de finalización:</label>
-                                        <input type="datetime-local" id="fechahorafin-edit" name="fechahorafin-edit" value="<?php echo $fechahorafin; ?>" required>
+                                        <input type="datetime-local" id="fechahorafin-edit" name="fechahorafin-edit" value="<?php echo $fechahorafin->format('Y-m-d H:i'); ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="instructor-edit" class="form-label">Instructor:</label>
@@ -385,7 +438,7 @@ if (empty($list_instructor)) {
                                     </div>
                                     <div class="mb-3">
                                         <label for="descripcion-edit">Descripción:</label>
-                                        <textarea class="form-control" rows="5" id="descripcion-edit" name="descripcion-edit" maxlength="500" value="<?php echo $descripcion; ?>"></textarea>
+                                        <textarea class="form-control" rows="5" id="descripcion-edit" name="descripcion-edit" maxlength="500"><?php echo $descripcion; ?></textarea>
                                     </div>
                                     <div class="mb-3 mt-3">
                                         <label for="linkevent-edit" class="form-label">Link del evento:</label>
@@ -410,7 +463,9 @@ if (empty($list_instructor)) {
                 </div>
                 <!-------------->
 
+
             <?php } ?>
+
 
         </tbody>
     </table>
@@ -441,6 +496,7 @@ if (empty($list_instructor)) {
                 $imageLink = $value['imageLink'];
                 $descripcion = $value['descripcion'];
                 $instagramLink = $value['instagramLink'];
+                $linkcategoria = $value['linkcategoria'];
                 $whatsapp = $value['whatsapp'];
                 $shortcode = $value['shortcode'];
                 $timestamp = $value['timestamp'];
@@ -456,6 +512,7 @@ if (empty($list_instructor)) {
                     <td><?php echo $cargo; ?></td>
                     <td><?php echo $instructorid; ?></td>
                     <td>
+                        <a data-bs-toggle="modal" data-bs-target="#editinstructormodal<?php echo $instructorid; ?>" class='page-title-action'>Editar</a>
                         <a data-bs-toggle="modal" data-bs-target="#deleteinstructormodal<?php echo $instructorid; ?>" class='page-title-action'>Borrar</a>
                     </td>
                 </tr>
@@ -483,9 +540,72 @@ if (empty($list_instructor)) {
                 </div>
                 <!----------->
 
+                <!---MODAL EDIT INSTRUCTOR--->
+                <div class="modal fade" id="editinstructormodal<?php echo $instructorid; ?>">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title">Editar instructor <?php echo $instructorid; ?></h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="post">
+
+                                <div class="modal-body">
+                                    <div class="w-50">
+                                        <img id='image-preview-instructor-edit' src='<?php echo $imageLink; ?>' height='200px' width='200px'>
+                                        <input id="upload-button4" type="button" class="button btn btn-primary mt-2" value="Cambiar imagen" />
+                                        <input id="image-url4" type="hidden" name="image-url4" value='<?php echo $imageLink; ?>' />
+                                    </div>
+
+                                    <input id="instructorid" type="hidden" name="instructorid" value='<?php echo $instructorid; ?>' />
+
+                                    <div class="mb-3 mt-3">
+                                        <label for="nameinstructor-edit" class="form-label">Nombre:</label>
+                                        <input type="text" class="form-control" id="nameinstructor-edit" value="<?php echo $nombre; ?>" name="nameinstructor-edit" maxlength="45">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="cargo-edit" class="form-label">Cargo:</label>
+                                        <input type="text" class="form-control" id="cargo-edit" value="<?php echo $cargo; ?>" name="cargo-edit" maxlength="45">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="linkInstagram-edit" class="form-label">Link Instagram:</label>
+                                        <input type="text" class="form-control" id="linkInstagram-edit" value="<?php echo $instagramLink; ?>" name="linkInstagram-edit" maxlength="250">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="whatsapp-edit" class="form-label">Whatsapp:</label>
+                                        <input type="tel" class="form-control" id="whatsapp-edit" value="<?php echo $whatsapp; ?>" name="whatsapp-edit" maxlength="45">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion3">Descripción:</label>
+                                        <textarea class="form-control" rows="5" id="descripcion3" name="descripcion3" maxlength="500">
+                                            <?php echo $descripcion; ?>
+                                        </textarea>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="linkcategoria-edit" class="form-label">Link categoria:</label>
+                                        <input type="text" class="form-control" id="linkcategoria-edit" value="<?php echo $linkcategoria; ?>" name="linkcategoria-edit" maxlength="250">
+                                    </div>
+                                    <br>
+                                    <div class="w-100 text-center">
+                                        <button id="editinstructor" name="editinstructor" type="submit" class="btn btn-primary">Editar</button>
+                                    </div>
+                                    <br>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-------------->
+
             <?php
             }
             ?>
+
         </tbody>
     </table>
 
@@ -574,7 +694,7 @@ if (empty($list_instructor)) {
                         <div class="w-50">
                             <img id='image-preview-instructor' src='<?php echo plugin_dir_url(__FILE__) . "img/character.webp"; ?>' height='200px' width='200px'>
                             <input id="upload-button2" type="button" class="button btn btn-primary mt-2" value="Cambiar imagen" />
-                            <input id="image-url2" type="hidden" name="image-url2" value='<?php echo plugin_dir_url(__FILE__) . "img/character.webp"; ?>' />
+                            <input id="image-url2" type="hidden" name="image-url2" value='<?php echo plugin_dir_url(__FILE__) . "img/character.webp"; ?>' maxlength="250" />
                         </div>
 
                         <div class="mb-3 mt-3">

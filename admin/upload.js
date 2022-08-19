@@ -59,7 +59,6 @@ jQuery(document).ready(function ($) {
             $('#image-url2').val(attachment.url);
             document.getElementById("image-preview-instructor").src = attachment.url;
         });
-
         mediaUploader.open();
     });
 
@@ -70,7 +69,7 @@ jQuery(document).ready(function ($) {
 jQuery(document).ready(function ($) {
     var mediaUploader;
 
-    $('#upload-button-edit').click(function (e) {
+    $('#upload-button3').click(function (e) {
         e.preventDefault();
 
         if (mediaUploader) {
@@ -88,8 +87,40 @@ jQuery(document).ready(function ($) {
 
         mediaUploader.on('select', function () {
             attachment = mediaUploader.state().get('selection').first().toJSON();
-            $('#image-url-edit').val(attachment.url);
+            $('#image-url3').val(attachment.url);
             document.getElementById("image-preview-event-edit").src = attachment.url;
+        });
+
+        mediaUploader.open();
+    });
+
+});
+
+/*upload EDIT 2*/
+
+jQuery(document).ready(function ($) {
+    var mediaUploader;
+
+    $('#upload-button4').click(function (e) {
+        e.preventDefault();
+
+        if (mediaUploader) {
+            mediaUploader.open();
+            return;
+        }
+
+        mediaUploader = wp.media.frames.file_frame = wp.media({
+            title: 'Choose Image',
+            button: {
+                text: 'Choose Image'
+            },
+            multiple: false
+        });
+
+        mediaUploader.on('select', function () {
+            attachment = mediaUploader.state().get('selection').first().toJSON();
+            $('#image-url4').val(attachment.url);
+            document.getElementById("image-preview-instructor-edit").src = attachment.url;
         });
 
         mediaUploader.open();

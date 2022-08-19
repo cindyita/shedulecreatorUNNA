@@ -83,7 +83,7 @@ echo "<h1>Crear nuevo evento</h1>";
 function dcms_insert_script_upload()
 {
 wp_enqueue_media();
-wp_register_script('my_upload', plugin_dir_url(__FILE__) . '/admin/upload.js', array('jquery'), '1', true);
+wp_register_script('my_upload', plugin_dir_url(__FILE__) . '/admin/upload.js', array('jquery'), '4', true);
 wp_enqueue_script('my_upload');
 }
 add_action("admin_enqueue_scripts", "dcms_insert_script_upload");
