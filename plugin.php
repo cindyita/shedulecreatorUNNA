@@ -175,4 +175,29 @@ return $html;
 
 add_shortcode("SH_ALL_EVENTS", "showOverview");
 
+add_action('wp_enqueue_scripts', 'ls_scripts_styles', 20);
+/**
+ * SwiperJS Scripts
+ */
+function ls_scripts_styles()
+{
+    wp_enqueue_style('swipercssbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.css', array(), '6.4.11', 'all');
+    wp_enqueue_script('swiperjsbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.js', array(), '6.4.11', true);
+    wp_enqueue_script('swiperinit', plugin_dir_url(__FILE__) . '/admin/assets/swiper-init.js', array('swiperjsbundle'), '1.0.0', true);
+}
+/*
+add_action('admin_enqueue_scripts', 'ls_scripts_styles');
+function EncolarJS($hook)
+{
+    if ($hook != "shedule-creator/admin/list_shedule.php") {
+        return;
+    }
+    wp_enqueue_script('JsExterno', plugins_url('admin/shedule.js', __FILE__), array('jquery'));
+    wp_localize_script('JsExterno', 'sAjax', [
+        'url' => admin_url('admin-ajax.php'),
+        'seguridad' => wp_create_nonce('seg')
+    ]);
+}
+add_action('admin_enqueue_scripts', 'EncolarJS');
+*/
 ?>

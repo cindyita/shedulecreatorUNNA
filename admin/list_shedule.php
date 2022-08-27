@@ -350,7 +350,7 @@ if (empty($list_instructor)) {
                                     echo $value['nombre'];
                                 } ?>
 
-                            <?php } ?>
+                            <?php } ?> 
                         </td>
 
                         <td><?php echo "2"; ?></td>
@@ -408,7 +408,7 @@ if (empty($list_instructor)) {
 
                                         <div class="mb-3 mt-3">
                                             <label for="eventname-edit" class="form-label">Nombre del evento:</label>
-                                            <input type="text" class="form-control" id="eventname-edit" value="<?php echo $nombre; ?>" name="eventname-edit" maxlength='45' required>
+                                            <input type="text" class="form-control" id="eventname-edit" value="<?php echo $nombre; ?>" name="eventname-edit" maxlength='150' required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="fechahorainicio-edit" class="form-label">Fecha y hora de inicio:</label>
@@ -850,7 +850,7 @@ if (empty($list_instructor)) {
 
                         <div class="mb-3 mt-3">
                             <label for="eventname" class="form-label">Nombre del evento:</label>
-                            <input type="text" class="form-control" id="eventname" placeholder="Nombre del evento" name="eventname" maxlength='45' required>
+                            <input type="text" class="form-control" id="eventname" placeholder="Nombre del evento" name="eventname" maxlength='150' required>
                         </div>
                         <div class="mb-3">
                             <label for="fechahorainicio" class="form-label">Fecha y hora de inicio:</label>

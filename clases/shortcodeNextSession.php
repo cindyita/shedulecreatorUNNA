@@ -67,7 +67,7 @@
                     break;
             }
 
-            if ($todaydmy == $fechahorainicio) {
+            if ($todaydmy == $date) {
                 $week = "Hoy";
             }
 
@@ -129,7 +129,9 @@
                         <div class='d-flex flex-column justify-content-center w-100 w-md-50 pt-3 pt-md-0 ps-0 ps-md-4'>
                             <h1 style='font-size:31px;color:#2B2B2B;'>$nombre</h1>
                             <div>
-                                <p style='line-hight:5pt;color:#2B2B2B;'>$week $day de $month <br> $hour</p>
+
+                            <p style='line-hight:5pt;color:#2B2B2B;'>$week $day de $month <br> $hour</p>
+ 
                             </div>
                             
                             <a href='$linkcalendar' class='w-50'>

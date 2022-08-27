@@ -1,4 +1,8 @@
-<?php 
+<?php
+
+// require_once(home_url() . "/wp-load.php");
+ require_once($_SERVER['DOCUMENT_ROOT'] . "/_PROGRAMAS/_UNNA/unna-wordpress/wp-load.php");
+    date_default_timezone_set('America/Mexico_City');
 
     class shortcodeOverview{
 
@@ -15,224 +19,501 @@
             return $data;
         }
 
-        public function getInstructors($id){
+        public function getInstructors(){
             global $wpdb;
             $tabla_instructor = "{$wpdb->prefix}shedule_instructor";
 
-            $query = "SELECT * FROM $tabla_instructor WHERE instructorid = '$id'";
+            $query = "SELECT * FROM $tabla_instructor";
             $data = $wpdb->get_results($query, ARRAY_A);
 
             if (empty($data)) {
                 $data = array();
             }
-            return $data[0];
+            return $data;
         }
 
-        public function eventFromOpen($e){
+
+
+        public function converterWeek($datestart){
+
+            $week = $datestart->format('N');
+
+            switch ($week) {
+                case 1:
+                    $week = "Lunes";
+                    break;
+                case 2:
+                    $week = "Martes";
+                    break;
+                case 3:
+                    $week = "Miércoles";
+                    break;
+                case 4:
+                    $week = "Jueves";
+                    break;
+                case 5:
+                    $week = "Viernes";
+                    break;
+                case 6:
+                    $week = "Sábado";
+                    break;
+                case 7:
+                    $week = "Domingo";
+                    break;
+                default:
+                    $week = "Algún día";
+                    break;
+            }
+
+            return $week;
+
+
+        }
+
+        public function converterMonth($datestart){
+
+            $month = $datestart->format('m');
+        
+            switch ($month) {
+                case 1:
+                    $month = "Enero";
+                    break;
+                case 2:
+                    $month = "Febrero";
+                    break;
+                case 3:
+                    $month = "Marzo";
+                    break;
+                case 4:
+                    $month = "Abril";
+                    break;
+                case 5:
+                    $month = "Mayo";
+                    break;
+                case 6:
+                    $month = "Junio";
+                    break;
+                case 7:
+                    $month = "Julio";
+                    break;
+                case 8:
+                    $month = "Agosto";
+                    break;
+                case 9:
+                    $month = "Septiembre";
+                    break;
+                case 10:
+                    $month = "Octubre";
+                    break;
+                case 11:
+                    $month = "Noviembre";
+                    break;
+                case 12:
+                    $month = "Diciembre";
+                    break;
+                default:
+                    $month = "Algún mes";
+                    break;
+
+                    
+            }
+            
+            return $month;
+        }
+
+        public function converterDuration($duracion){
+
+            $duraciondate = "";
+
+            if ($duracion->y == 1) {
+                $duraciondate .= $duracion->y . " año ";
+            } else if ($duracion->y > 1) {
+                $duraciondate .= $duracion->y . " años ";
+            }
+
+            if ($duracion->m == 1) {
+                $duraciondate .= $duracion->m . " mes ";
+            } else if ($duracion->m > 1) {
+                $duraciondate .= $duracion->m . " meses ";
+            }
+
+            if ($duracion->d == 1) {
+                $duraciondate .= $duracion->d . " día ";
+            } else if ($duracion->d > 1) {
+                $duraciondate .= $duracion->d . " dias ";
+            }
+
+            if ($duracion->h == 1) {
+                $duraciondate .= $duracion->h . " hora ";
+            } else if ($duracion->h > 1) {
+                $duraciondate .= $duracion->h . " horas ";
+            }
+
+            if ($duracion->i >= 1) {
+                $duraciondate .= $duracion->i . " min ";
+            }
+
+            if ($duracion->s >= 1 && $duraciondate == "") {
+                $duraciondate .= $duracion->s . " s";
+            }
+
+            return $duraciondate;
+
+        }
+
+            public function eventRegistration($idEvent)
+            {
+
+                global $wpdb;
+                $userId = get_current_user_id();
+                $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                $format = NULL;
+
+                if (isset($idEvent)) {
+                    $data = array(
+                        'registerid' => NULL,
+                        'userid' => $userId,
+                        'eventid' => $idEvent
+                    );
+                }
+
+                try {
+
+                    $wpdb->insert($tabla_register, $data, $format);
+                } catch (Exception $e) {
+
+                    echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                }
+
+
+                echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+            }
+
+            public function searchRegister($eventid)
+            {
+
+                global $wpdb;
+                $userId = get_current_user_id();
+                $tabla_register = "{$wpdb->prefix}shedule_registrations";
+
+                $query = "SELECT $userId FROM $tabla_register ORDER BY eventid DESC limit 1";
+                $res = $wpdb->get_results($query, ARRAY_A);
+
+                $return = false;
+
+                foreach ($res as $value) {
+                    if ($value['eventid'] == $eventid) {
+                        $return = true;
+                    }
+                }
+                return $return;
+            }
+
+        public function eventFromOpen($e,$i){
+            global $wpdb;
+            $current_user = wp_get_current_user();
+
+            $actualClass = new shortcodeOverview;
+
+           
+            if(isset($_GET['id'])){
+                print_r('la id es: '. $_GET['id']);
+            }
+
+            if (isset($_POST['inscribirse'])) {
+
+                $idins = $_POST['id'];
+
+                $userId = get_current_user_id();
+                $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                $format = NULL;
+
+                if (isset($idins)) {
+                    $data = array(
+                        'registerid' => NULL,
+                        'userid' => $userId,
+                        'eventid' => $idins,
+                        'timestamp' => NULL
+                    );
+                }
+
+                try {
+                    $wpdb->insert($tabla_register, $data, $format);
+                } catch (Exception $e) {
+
+                    echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                }
+
+                echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+
+            }
 
             $html = "
             <script src='https://kit.fontawesome.com/e0df5df9e9.js' crossorigin='anonymous'></script>
             <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
             <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
-            
+
+            <div class='w-100'>
             <div class='wrap' style='display:flex;padding:0 10px;'>
+
+                <div class='swiper swipersheduleoverview' style='width:77%;'>
+                    <div class='swiper-wrapper px-5'>
                     
             ";
 
             foreach ($e as $key => $value) {
-                
-                $nombre = $value['nombre'];
-                $datestart = $value['fechahorainicio'];
-                $datestart = new DateTime($datestart);
-                $week = $datestart->format('N');
-                $month = $datestart->format('m');
-                $dateend = $value['fechahorafin'];
-                $dateend = new DateTime($dateend);
-                $duracion = $datestart->diff($dateend);
-                $duraciondate = "";
-                $hour = $datestart->format('g:i a');
-                $date = $datestart->format('d/m/Y');
-                $day = $datestart->format('d');
-                $id = $value['eventoid'];
 
+                $id = $value['eventoid'];
+                $nombre = $value['nombre'];
                 $linkevent = $value['linkevent'];
                 $instructorIdAssign = $value['instructorIdAssign'];
 
+                $datestart = $value['fechahorainicio'];
+                $datestart = new DateTime($datestart);
+                $dateend = $value['fechahorafin'];
+                $dateend = new DateTime($dateend);
+                $duracion = $datestart->diff($dateend);
+
+                $day = $datestart->format('d');
+                $hour = $datestart->format('g:i a');
+                $date = $datestart->format('d/m/Y');
+
+                $month = $actualClass->converterMonth($datestart);
+                $week = $actualClass->converterWeek($datestart);
+                $duraciondate = $actualClass->converterDuration($duracion);
+
+                foreach ($i as $key => $valuei) {
+
+                    $idInstructor = $valuei['instructorid'];
+
+                    if($idInstructor == $instructorIdAssign){
+
+                        $nameInstructor = $valuei['nombre'];
+                        $imageInstructor = $valuei['imageLink'];
+
+                    }
+                    
+                }
+
                 $today = new DateTime();
-                $todaydmy = $today->format('d/m/Y');
+                $todayFormat = $today->format('d/m/Y');
 
-                switch ($week) {
-                    case 1:
-                        $week = "Lunes";
-                        break;
-                    case 2:
-                        $week = "Martes";
-                        break;
-                    case 3:
-                        $week = "Miércoles";
-                        break;
-                    case 4:
-                        $week = "Jueves";
-                        break;
-                    case 5:
-                        $week = "Viernes";
-                        break;
-                    case 6:
-                        $week = "Sábado";
-                        break;
-                    case 7:
-                        $week = "Domingo";
-                        break;
-                    default:
-                        $week = "Algún día";
-                        break;
-                }
-
-                if($todaydmy == $date){
-                    $week = "Hoy";
-                }
-
-                switch ($month) {
-                    case 1:
-                        $month = "Enero";
-                        break;
-                    case 2:
-                        $month = "Febrero";
-                        break;
-                    case 3:
-                        $month = "Marzo";
-                        break;
-                    case 4:
-                        $month = "Abril";
-                        break;
-                    case 5:
-                        $month = "Mayo";
-                        break;
-                    case 6:
-                        $month = "Junio";
-                        break;
-                    case 7:
-                        $month = "Julio";
-                        break;
-                    case 8:
-                        $month = "Agosto";
-                        break;
-                    case 9:
-                        $month = "Septiembre";
-                        break;
-                    case 10:
-                        $month = "Octubre";
-                        break;
-                    case 11:
-                        $month = "Noviembre";
-                        break;
-                    case 12:
-                        $month = "Diciembre";
-                        break;
-                    default:
-                        $month = "Algún mes";
-                        break;
-                }
-
-                if ($duracion->y == 1) {
-                    $duraciondate .= $duracion->y . " año ";
-                } else if ($duracion->y > 1) {
-                    $duraciondate .= $duracion->y . " años ";
-                }
-
-                if ($duracion->m == 1) {
-                    $duraciondate .= $duracion->m . " mes ";
-                } else if ($duracion->m > 1) {
-                    $duraciondate .= $duracion->m . " meses ";
-                }
-
-                if ($duracion->d == 1) {
-                    $duraciondate .= $duracion->d . " día ";
-                } else if ($duracion->d > 1) {
-                    $duraciondate .= $duracion->d . " dias ";
-                }
-
-                if ($duracion->h == 1) {
-                    $duraciondate .= $duracion->h . " hora ";
-                } else if ($duracion->h > 1) {
-                    $duraciondate .= $duracion->h . " horas ";
-                }
-
-                if ($duracion->i >= 1) {
-                    $duraciondate .= $duracion->i . " min ";
-                }
-
-                if ($duracion->s >= 1 && $duraciondate == "") {
-                    $duraciondate .= $duracion->s . " s";
+                if($date == $todayFormat){
+                    $week = 'Hoy';
                 }
 
                 if($datestart >= $today){
 
                     $html .= "
-                        <div style='padding:20px;margin:5px;box-shadow:2px 2px 4px 2px lightgrey;background-color:#F1F0EA;width:220px;'>
-                            <a>
+                                    
+                    <div class='swiper-slide' style='width:100%;'>
+
+                        <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:220px;height:415px;'>
+                            <a style='position:relative;'>
                                 <h1 style='font-size:30px;'>$week</h1>
                                 ";
 
-                            if ($week != "Hoy") {
-                                $html .= "<p style='color:#8A7E71;font-size:11px;'>$day de $month</p>";
-                            } else {
-                                $html .= "<br>";
+                            if ($week != 'Hoy') {
+                                $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;position:absolute;top:25px;'>$day de $month</p>";
                             }
 
                     $html .= "
                             </a>
-                            <h1 style='color:#8A7E71;font-size:21pt;'>$hour</h1>
-                            <p style='font-size:14pt;cursor:pointer;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre</p>
+                            <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour</h1>
+                            <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre</p>
+                            ";
 
-                            <p>Instructor: $instructorIdAssign</p>
-                            <hr>
-
-                            <p style='color:#8A7E71;font-size:14pt;'>$duraciondate</p>
-
-                            <a href='$linkevent' class='w-50'>
-                                <button class='btn w-75'style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>registrarme</button>
+                    $html .="
+                            <a style='cursor:pointer;' data-bs-toggle='modal' data-bs-target='#modalInstructor$instructorIdAssign'>
+                            <p><img src='$imageInstructor' style='width:50px;height:50px;border-radius:50%;margin-right:5px;'> $nameInstructor</p>
                             </a>
+                            <hr>
+                            <div style='width:20%;height:2px;background-color:#8A7E71;'></div>
+                            <p style='color:#8A7E71;font-size:14pt;'>$duraciondate</p>
+                                
+                                ";
 
-                        </div>
-                    ";
+                $checkRegister = $actualClass->searchRegister($id);
+                        
+                    if($current_user != 0){
+
+                                    if ($checkRegister == true) {
+                                        $html .= "
+                                                    <a href='$linkevent'>
+                                                        Clase reservada
+                                                    </a>
+                                            ";
+                                    } else {
+
+                                        $html .= "  <form method='POST'>
+                                                        <input type='hidden' id='id' name='id' value='$id'>
+                                                        <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse' type='submit'>inscribirme</button>  
+                                                    </form>
+                                            ";
+                                    }
+                            }elseif($current_user == 0){
+                                $html .= "
+                                            <a href='register'>
+                                                <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                            </a>
+                                        
+                                    ";
+                            }
+
                     $html .= "
-                        <!-- The Modal -->
-                        <div class='modal' id='modal$id'>
-                            <div class='modal-dialog'>
-                                <div class='modal-content'>
+                        </div>
+                            </div> <!----Fin slider---->
 
-                                <!-- Modal Header -->
-                                <div class='modal-header'>
-                                    <h4 class='modal-title'>Modal Heading</h4>
-                                    <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
-                                </div>
+                    "; 
+                }      
+            
+            }
+
+        $html .= "
+                        </div>
+                            <div class='swiper-button-next'></div>
+                            <div class='swiper-button-prev'></div>
+                        </div>
+            ";
+
+
+        foreach ($e as $value2) {
+            $idmodal = $value2['eventoid'];
+            $imageLinkModal = $value2['imageLink'];
+            $nombreModal = $value2['nombre'];
+            $dateModal =  new DateTime($value2['fechahorainicio']);
+            $hourModal = date("g:s a", strtotime($value2['fechahorainicio']));
+            $descripcionModal = $value2['descripcion'];
+            $linkCalendarModal = $value2['linkcalendar'];
+            $idInstructorModal = $value2['instructorIdAssign'];
+
+            $day = $dateModal->format('d');
+            $month = $actualClass->converterMonth($dateModal);
+            $week = $actualClass->converterWeek($dateModal);
+
+
+        $html .= "
+                        <div class='modal' id='modal$idmodal'>
+                            <div class='modal-dialog modal-dialog-centered modal-lg'>
+                                <div class='modal-content' style='border-radius:0;'>
 
                                 <!-- Modal body -->
-                                <div class='modal-body'>
-                                    Modal body..
+                                <div class='modal-body' style='position:relative;padding:0;'>
+                                
+                                <button type='button'style='position:absolute;top:8px;right:6px;' class='btn-close' data-bs-dismiss='modal'></button>
+
+                                    <div style='width:100%;height:280px;background-image:url($imageLinkModal);background-size:cover;background-position:center center;'>
+                                    </div>
+
+                                    <div style='padding:50px;'>
+                                        <div class='d-flex flex-column'>
+                                            <h1 style='font-size:25pt'>$nombreModal</h1>
+                                            <p style='line-height:12pt;'>$week $day de $month</p>
+                                            <p style='line-height:12pt;'>$hourModal</p>
+                                        </div>
+                                ";
+
+                                foreach ($i as $valuein) {
+
+                                    $idInstructor = $valuein['instructorid'];
+
+                                    if ($idInstructor == $idInstructorModal) {
+
+                                        $nameInstructorModal = $valuein['nombre'];
+                                        $imageInstructorModal = $valuein['imageLink'];
+
+                                $html .= "
+
+                                        <div style='display:flex;align-items:center;'>
+                                            <img src='$imageInstructorModal' style='border-radius:50%;width:45px;height:45px;margin-right:10px;margin-bottom:18px;'>
+                                            <p>$nameInstructorModal</p>
+                                        </div>
+
+                                ";
+                                    }
+                                }
+                                $html .= "
+
+                                        <p>$descripcionModal</p>
+                                        <br>
+                                        <div>
+                                            <a href='$linkevent'>
+                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
+                                            </a>
+                                            <a href='$linkCalendarModal' class='ms-2'>
+                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
+                                            </a>
+                                        </div>
+                                        <br>
+                                    </div>
+                                    
                                 </div>
 
-                                <!-- Modal footer -->
-                                <div class='modal-footer'>
-                                    <button type='button' class='btn btn-danger' data-bs-dismiss='modal'>Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+        ";
+        }
+
+            foreach ($i as $valueins) {
+
+                $idInsModal = $valueins['instructorid'];
+
+                $nameInsModal = $valueins['nombre'];
+                $imageInsModal = $valueins['imageLink'];
+                $descInsModal = $valueins['descripcion'];
+                $cargoInsModal = $valueins['cargo'];
+                $whatsInsModal = $valueins['whatsapp'];
+                $instaInsModal = $valueins['instagramLink'];
+                $linkcategoriaInsModal = $valueins['linkcategoria'];
+
+
+        $html .= "
+                        <div class='modal' id='modalInstructor$idInsModal'>
+                            <div class='modal-dialog modal-dialog-centered modal-lg'>
+                                <div class='modal-content' style='border-radius:0;'>
+
+                                <!-- Modal body -->
+                                <div class='modal-body' style='position:relative;padding:0;'>
+                                <button type='button'style='position:absolute;top:8px;right:6px;' class='btn-close' data-bs-dismiss='modal'></button>
+
+                                    <div style='width:100%;height:400px;background-image:url($imageInsModal);background-size:cover;background-position:center center;'>
+                                    </div>
+
+                                    <div style='padding:50px;'>
+                                        <div class='d-flex flex-column'>
+                                            <h1 style='font-size:25pt'>$nameInsModal</h1>
+                                            <p style='line-height:12pt;'>$cargoInsModal</p>
+                                        </div>
+
+                                        <p>$descInsModal</p>
+                                        <br>
+                                        <div>
+                                            <a href='$linkcategoriaInsModal'>
+                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Ver clases</button>
+                                            </a>
+                                            <a href='$instaInsModal'>
+                                                <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png' style='width:35px;height:35px;'>
+                                            </a>
+                                        </div>
+                                        <br>
+                                    </div>
+                                    
                                 </div>
 
                                 </div>
                             </div>
                         </div>
-                    "; 
-                }
-            
-            }
-
-
+        ";
+        }
 
             return $html;
         }
 
         public function eventFromClose(){
-            $html = "  
+            $html = "           
+                </div>
                 </div>
             ";
             return $html;
@@ -241,8 +522,9 @@
         function showOverview(){
 
             $e = $this->getEvents();
+            $i = $this->getInstructors();
 
-            $html = $this->eventFromOpen($e);
+            $html = $this->eventFromOpen($e,$i);
             $html .= $this->eventFromClose();
 
             return $html;

@@ -22,20 +22,22 @@
                     <div style='width:100%;height:250px;background-image:url($imageLinkInstructor);background-size:cover;background-position:center center;'>
                     </div>
                     <div style='padding:25px;'>
-                        <h4>$nombreInstructor</h4>
+                        <h1 style='font-size:25pt'>$nombreInstructor</h1>
                         <p>$cargo</p>
                         <p>$descripcion</p>
                         <br>
-                        <div>
+                        <div class='d-flex justify-content-start align-items-center'>
                             <a href='$linkcategoria'>
                                 <button class='btn'style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>registrarme</button>
                             </a>
                             <a href='$instagramLink'>
-                                <i class='fa-brands fa-instagram'></i>
+                                <i class='fa-brands fa-instagram mx-1' style='font-size:25pt;'></i>
                             </a>
+                            <!----
                             <a href='$whatsapp'>
-                                <i class='fa-brands fa-whatsapp'></i>
+                                <i class='fa-brands fa-whatsapp mx-1' style='font-size:25pt;'></i>
                             </a>
+                            ------->
                         </div>
                         <br>
                     </div>

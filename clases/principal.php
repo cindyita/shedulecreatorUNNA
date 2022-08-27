@@ -8,7 +8,7 @@ class principal{
 
         $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}shedule_event(
             `eventoid` INT NOT NULL AUTO_INCREMENT,
-            `nombre` VARCHAR(45) NULL,
+            `nombre` VARCHAR(150) NULL,
             `imageLink` VARCHAR(250) NULL,
             `fechahorainicio` DATETIME NULL,
             `fechahorafin` DATETIME NULL,
@@ -35,8 +35,17 @@ class principal{
             PRIMARY KEY(`instructorid`)
         );";
 
+        $sql3 = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}shedule_registrations(
+            `registerid` INT NOT NULL AUTO_INCREMENT,
+            `userid` INT(11) NULL,
+            `eventid` INT(11) NULL,
+            `timestamp` TIMESTAMP,
+            PRIMARY KEY(`registerid`)
+        );";
+
         $wpdb->query($sql);
         $wpdb->query($sql2);
+        $wpdb->query($sql3);
 
         /*
 
