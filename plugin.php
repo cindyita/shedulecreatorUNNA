@@ -3,7 +3,7 @@
 Plugin Name: Shedule creator UNNA
 Description:  Creador de itinerarios para UNNA
 Author: cindy ita
-Version: BETA 1.0.3
+Version: BETA 1.1
 */
 
 if (!defined('ABSPATH')) die();
@@ -20,6 +20,7 @@ require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeEvent.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeInstructor.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeNextSession.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverview.php';
+require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeMyEvents.php';
 
 $principal = new principal;
 
@@ -185,8 +186,9 @@ function ls_scripts_styles()
     wp_enqueue_script('swiperjsbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.js', array(), '6.4.11', true);
     wp_enqueue_script('swiperinit', plugin_dir_url(__FILE__) . '/admin/assets/swiper-init.js', array('swiperjsbundle'), '1.0.0', true);
 }
-/*
+
 add_action('admin_enqueue_scripts', 'ls_scripts_styles');
+/*
 function EncolarJS($hook)
 {
     if ($hook != "shedule-creator/admin/list_shedule.php") {
@@ -200,4 +202,14 @@ function EncolarJS($hook)
 }
 add_action('admin_enqueue_scripts', 'EncolarJS');
 */
+
+function showMyEvents()
+{
+    $_shortcode = new shortcodeMyEvents;
+    $html = $_shortcode->showMyEvents();
+    return $html;
+}
+
+add_shortcode("SH_MY_EVENTS", "showMyEvents");
+
 ?>

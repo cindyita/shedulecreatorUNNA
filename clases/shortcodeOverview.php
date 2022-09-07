@@ -1,7 +1,8 @@
 <?php
-
+define('WPINC', 'wp-includes');
+require_once ABSPATH . WPINC . '/load.php';
 // require_once(home_url() . "/wp-load.php");
- require_once($_SERVER['DOCUMENT_ROOT'] . "/_PROGRAMAS/_UNNA/unna-wordpress/wp-load.php");
+// require_once($_SERVER['DOCUMENT_ROOT'] . "/_PROGRAMAS/_UNNA/unna-wordpress/wp-load.php");
     date_default_timezone_set('America/Mexico_City');
 
     class shortcodeOverview{
@@ -193,17 +194,17 @@
             {
 
                 global $wpdb;
-                $userId = get_current_user_id();
+                $userid = get_current_user_id();
                 $tabla_register = "{$wpdb->prefix}shedule_registrations";
 
-                $query = "SELECT $userId FROM $tabla_register ORDER BY eventid DESC limit 1";
+                $query = "SELECT * FROM $tabla_register WHERE userid = $userid";
                 $res = $wpdb->get_results($query, ARRAY_A);
 
-                $return = false;
+                $return = 0;
 
                 foreach ($res as $value) {
                     if ($value['eventid'] == $eventid) {
-                        $return = true;
+                        $return = 1;
                     }
                 }
                 return $return;
@@ -211,40 +212,47 @@
 
         public function eventFromOpen($e,$i){
             global $wpdb;
+            $userId = get_current_user_id();
             $current_user = wp_get_current_user();
 
             $actualClass = new shortcodeOverview;
 
-           
-            if(isset($_GET['id'])){
-                print_r('la id es: '. $_GET['id']);
-            }
 
+            /*POST INSCRIPCION*/
             if (isset($_POST['inscribirse'])) {
 
-                $idins = $_POST['id'];
+                $idins = $_POST['inscripcionid'];
+                $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
-                $userId = get_current_user_id();
-                $tabla_register = "{$wpdb->prefix}shedule_registrations";
-                $format = NULL;
+                if($actualClass->searchRegister($idins) != 1){
 
-                if (isset($idins)) {
-                    $data = array(
-                        'registerid' => NULL,
-                        'userid' => $userId,
-                        'eventid' => $idins,
-                        'timestamp' => NULL
-                    );
+                    $userid = get_current_user_id();
+                    $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                    $format = NULL;
+
+                    if (isset($idins)) {
+                        $data = array(
+                            'registerid' => NULL,
+                            'userid' => $userid,
+                            'eventid' => $idins,
+                            'timestamp' => NULL
+                        );
+                    }
+
+                    try {
+                        $wpdb->insert($tabla_register, $data, $format);
+                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+                        sleep(5);
+                        header("Location: $url");
+            
+                    } catch (Exception $e) {
+
+                        echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                    }
+
+                }else{
+                    echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
                 }
-
-                try {
-                    $wpdb->insert($tabla_register, $data, $format);
-                } catch (Exception $e) {
-
-                    echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
-                }
-
-                echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
 
             }
 
@@ -282,6 +290,8 @@
                 $week = $actualClass->converterWeek($datestart);
                 $duraciondate = $actualClass->converterDuration($duracion);
 
+                $checkRegister = $actualClass->searchRegister($id);
+
                 foreach ($i as $key => $valuei) {
 
                     $idInstructor = $valuei['instructorid'];
@@ -297,18 +307,20 @@
 
                 $today = new DateTime();
                 $todayFormat = $today->format('d/m/Y');
+            
 
                 if($date == $todayFormat){
                     $week = 'Hoy';
                 }
+                
 
                 if($datestart >= $today){
 
                     $html .= "
                                     
-                    <div class='swiper-slide' style='width:100%;'>
+                    <div class='swiper-slide d-flex justify-content-center' style='width:100%;'>
 
-                        <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:220px;height:415px;'>
+                        <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:240px;height:415px;'>
                             <a style='position:relative;'>
                                 <h1 style='font-size:30px;'>$week</h1>
                                 ";
@@ -332,12 +344,10 @@
                             <p style='color:#8A7E71;font-size:14pt;'>$duraciondate</p>
                                 
                                 ";
-
-                $checkRegister = $actualClass->searchRegister($id);
                         
                     if($current_user != 0){
 
-                                    if ($checkRegister == true) {
+                                    if ($checkRegister == 1) {
                                         $html .= "
                                                     <a href='$linkevent'>
                                                         Clase reservada
@@ -345,10 +355,24 @@
                                             ";
                                     } else {
 
-                                        $html .= "  <form method='POST'>
-                                                        <input type='hidden' id='id' name='id' value='$id'>
-                                                        <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse' type='submit'>inscribirme</button>  
+                                        
+
+                                        $html .= "  <form method='post' action=''>
+                                                        <input type='hidden' id='inscripcionid' name='inscripcionid' value='$id'>
+
+                                                        <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
+
+                                                        <span id='loading$id' style='display:none;'><div class='spinner-border spinner-border-sm'></div>
+                                                            Inscribiendo...
+                                                        </span>
                                                     </form>
+
+                                                    <script>
+                                                        function loading(id) {
+                                                            document.getElementById('inscribirse'+id).style.display = 'none';
+                                                            document.getElementById('loading'+id).style.display = 'block';
+                                                        }
+                                                    </script>
                                             ";
                                     }
                             }elseif($current_user == 0){
@@ -437,9 +461,10 @@
                                         <p>$descripcionModal</p>
                                         <br>
                                         <div>
-                                            <a href='$linkevent'>
+                                            <!--------
+                                            <a href=''>
                                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
-                                            </a>
+                                            </a>--------->
                                             <a href='$linkCalendarModal' class='ms-2'>
                                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
                                             </a>

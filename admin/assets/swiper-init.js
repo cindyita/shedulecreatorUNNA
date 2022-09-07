@@ -4,23 +4,23 @@ var swiper = new Swiper(".swipersheduleoverview", {
     breakpoints: {
         640: {
             slidesPerView: 2,
-            spaceBetween: 3,
+            spaceBetween: 2,
         },
         768: {
             slidesPerView: 3,
-            spaceBetween: 5,
+            spaceBetween: 4,
         },
         1024: {
             slidesPerView: 3,
-            spaceBetween: 5,
+            spaceBetween: 4,
         },
         1400: {
             slidesPerView: 5,
-            spaceBetween: 5,
+            spaceBetween: 4,
         },
         1920: {
-            slidesPerView: 7,
-            spaceBetween: 5,
+            slidesPerView: 6,
+            spaceBetween: 4,
         },
     },
     navigation: {

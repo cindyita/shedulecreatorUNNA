@@ -4,6 +4,7 @@ global $wpdb;
 
 $tabla_shedule = "{$wpdb->prefix}shedule_event";
 $tabla_instructor = "{$wpdb->prefix}shedule_instructor";
+$tabla_register = "{$wpdb->prefix}shedule_registrations";
 $format = NULL;
 
 ?>
@@ -244,13 +245,19 @@ $query2 = "SELECT * FROM $tabla_instructor";
 global $list_instructor;
 $list_instructor = $wpdb->get_results($query2, ARRAY_A);
 
+$query3 = "SELECT * FROM $tabla_register";
+global $list_register;
+$list_register = $wpdb->get_results($query3, ARRAY_A);
+
 if (empty($list_shedule)) {
     $list_shedule = array();
 }
 if (empty($list_instructor)) {
     $list_instructor = array();
 }
-
+if (empty($list_register)) {
+    $list_register = array();
+}
 
 ?>
 <div class="wrap">
@@ -258,6 +265,7 @@ if (empty($list_instructor)) {
     <h1><?php echo get_admin_page_title(); ?></h1>
 
     <br><br>
+
     <!-------LISTA DE EVENTOS ACTIVOS--------->
     <h1 class="wp-heading-inline">Lista de eventos</h1>
     <a type="button" data-bs-toggle="modal" data-bs-target="#addEvent" class="page-title-action">Añadir nuevo evento</a>
@@ -294,7 +302,23 @@ if (empty($list_instructor)) {
                 $fechahorainicio = new DateTime($fechahorainicio);
                 $fechahorafin = new DateTime($fechahorafin);
 
+                $nameinstructor = '';
+                foreach ($list_instructor as $values) {
+                    if ($values['instructorid'] == $instructorIdAssign) {
+                        $nameinstructor = $values['nombre'];
+                    }
+                }
+
+
+                $count = 0;
+                foreach ($list_register as $registers) {
+                    if ($registers['eventid'] == $eventoid) {
+                        $count = $count + 1;
+                    }
+                }
+
                 $duracion = $fechahorainicio->diff($fechahorafin);
+
                 if ($fechahorainicio >= $today) {
             ?>
 
@@ -306,7 +330,8 @@ if (empty($list_instructor)) {
                         </td>
                         <td><?php echo $nombre; ?></td>
                         <td><?php echo $fechahorainicio->format('d/m/Y h:i'); ?></td>
-                        <td><?php
+                        <td>
+                            <?php
 
                             if ($duracion->y == 1) {
                                 echo $duracion->y . " año ";
@@ -338,22 +363,21 @@ if (empty($list_instructor)) {
                                 echo $duracion->i . " minutos ";
                             }
 
-
                             ?>
+
                         </td>
-                        <td><?php echo $eventoid; ?></td>
 
                         <td>
-                            <?php foreach ($list_instructor as $key => $value) { ?>
-
-                                <?php if ($value['instructorid'] == $instructorIdAssign) {
-                                    echo $value['nombre'];
-                                } ?>
-
-                            <?php } ?> 
+                            <?php echo $eventoid; ?>
                         </td>
 
-                        <td><?php echo "2"; ?></td>
+                        <td>
+                            <?php echo $nameinstructor; ?>
+                        </td>
+
+                        <td>
+                            <a data-bs-toggle="modal" data-bs-target="#registersEvent<?php echo $eventoid; ?>"><?php echo $count; ?></a>
+                        </td>
 
                         <td>
                             <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
@@ -465,6 +489,172 @@ if (empty($list_instructor)) {
                         </div>
                     </div>
                     <!-------------->
+                    <!---MODAL VIEW EVENT--->
+                    <div class="modal fade" id="viewEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><?php echo $nombre; ?></h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="w-100 d-flex justify-content-start">
+                                        <img src='<?php echo $imageLink; ?>' height='270px' width='67%' class="mb-2">
+                                    </div>
+
+                                    <label class="my-2">
+                                        <strong>Inscritos: </strong><?php echo $count; ?>
+                                        <button data-bs-toggle="modal" data-bs-target="#registersEvent<?php echo $eventoid; ?>" class='page-title-action mx-1'>Ver inscritos </button>
+                                    </label>
+                                    <br>
+
+                                    <label class="my-2">
+                                        <strong>Evento id: </strong>
+                                        <?php echo $eventoid; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Descripción: </strong><br>
+                                        <?php echo $descripcion; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha y hora de inicio: </strong>
+                                        <?php echo $fechahorainicio->format('d/m/Y h:i');; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha y hora de finalización: </strong>
+                                        <?php echo $fechahorafin->format('d/m/Y h:i');; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Duración: </strong>
+                                        <?php
+
+                                        if ($duracion->y == 1) {
+                                            echo $duracion->y . " año ";
+                                        } else if ($duracion->y > 1) {
+                                            echo $duracion->y . " años ";
+                                        }
+
+                                        if ($duracion->m == 1) {
+                                            echo $duracion->m . " mes ";
+                                        } else if ($duracion->m > 1) {
+                                            echo $duracion->m . " meses ";
+                                        }
+
+                                        if ($duracion->d == 1) {
+                                            echo $duracion->d . " día ";
+                                        } else if ($duracion->d > 1) {
+                                            echo $duracion->d . " dias ";
+                                        }
+
+                                        if ($duracion->h == 1) {
+                                            echo $duracion->h . " hora ";
+                                        } else if ($duracion->h > 1) {
+                                            echo $duracion->h . " horas ";
+                                        }
+
+                                        if ($duracion->i == 1) {
+                                            echo $duracion->i . " minuto ";
+                                        } else if ($duracion->i > 1) {
+                                            echo $duracion->i . " minutos ";
+                                        }
+
+                                        ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Instructor: </strong>
+                                        <?php echo $nameinstructor; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Link event: </strong>
+                                        <?php echo $linkevent; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Link calendario: </strong>
+                                        <?php echo $linkcalendar; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Shortcode: </strong>
+                                        <?php echo $shortcode; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha de creación: </strong>
+                                        <?php echo $timestamp; ?>
+                                    </label>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
+                    <!---MODAL VIEW REGISTRATIONS--->
+                    <div class="modal fade" id="registersEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Registros para: <br><?php echo $nombre; ?> [ID: <?php echo $eventoid; ?>]</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <label class="mb-3">Total de registros: <?php echo $count; ?></label>
+                                    <?php
+                                    if (!$count <= 0) {
+                                    ?>
+                                        <div class="d-flex flex-column">
+                                            <div class="row text-bold" style="border-bottom:1px solid lightgrey;border-top:1px solid lightgrey;">
+                                                <div class="col-sm-2 p-3"><strong>Id reg</strong></div>
+                                                <div class="col-sm-2 p-3"><strong>Id usuario</strong></div>
+                                                <div class="col-sm-2 p-3"><strong>Usuario</strong></div>
+                                                <div class="col-sm-3 p-3"><strong>Email</strong></div>
+                                                <div class="col-sm-3 p-3"><strong>Fecha registro</strong></div>
+                                            </div>
+
+                                            <?php
+
+                                            foreach ($list_register as $registers) {
+
+                                                if ($registers['eventid'] == $eventoid) {
+                                                    $user = new WP_User($registers['userid']);
+                                                    /*  $user_phone = get_user_meta($registers['userid'], 'dbem_phone', true); */
+
+                                            ?>
+                                                    <div class="row" style="border-bottom:1px solid lightgrey;">
+                                                        <div class="col-sm-2 p-3"><?php echo $registers['registerid']; ?></div>
+                                                        <div class="col-sm-2 p-3"><?php echo $registers['userid']; ?></div>
+                                                        <div class="col-sm-2 p-3"><?php echo $user->user_nicename; ?></div>
+                                                        <div class="col-sm-3 p-3"><?php echo $user->user_email; ?></div>
+                                                        <div class="col-sm-3 p-3"><?php echo $registers['timestamp']; ?></div>
+                                                    </div>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+
+                                        </div>
+                                    <?php
+                                    } /* fin IF */
+                                    ?>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
 
 
             <?php }
@@ -508,6 +698,14 @@ if (empty($list_instructor)) {
 
                 $fechahorainicio = new DateTime($fechahorainicio);
                 $fechahorafin = new DateTime($fechahorafin);
+
+                $count = 0;
+
+                foreach ($list_register as $registers) {
+                    if ($registers['eventid'] == $eventoid) {
+                        $count = $count + 1;
+                    }
+                }
 
                 $duracion = $fechahorainicio->diff($fechahorafin);
                 if ($fechahorainicio < $today) {
@@ -568,7 +766,9 @@ if (empty($list_instructor)) {
                             <?php } ?>
                         </td>
 
-                        <td><?php echo "2"; ?></td>
+                        <td>
+                            <a data-bs-toggle="modal" data-bs-target="#registersEvent<?php echo $eventoid; ?>"><?php echo $count; ?></a>
+                        </td>
 
                         <td>
                             <a data-bs-toggle="modal" data-bs-target="#viewEvent<?php echo $eventoid; ?>" class='page-title-action'>Ver</a>
@@ -614,7 +814,7 @@ if (empty($list_instructor)) {
 
                                     <div class="modal-body">
                                         <div class="w-100">
-                                            <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='100px' width='100%' class="mb-2">
+                                            <img id='image-preview-event-edit' src='<?php echo $imageLink; ?>' height='270px' width='100%' class="mb-2">
                                             <input id="upload-button3" type="button" class="button btn btn-primary" value="Cambiar imagen" />
                                             <input id="image-url3" type="hidden" name="image-url3" value="<?php echo $imageLink; ?>" maxlength="250" />
                                         </div>
@@ -675,6 +875,172 @@ if (empty($list_instructor)) {
                                     </div>
 
                                 </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
+                    <!---MODAL VIEW EVENT--->
+                    <div class="modal fade" id="viewEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><?php echo $nombre; ?></h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="w-100 d-flex justify-content-start">
+                                        <img src='<?php echo $imageLink; ?>' height='270px' width='67%' class="mb-2">
+                                    </div>
+
+                                    <label class="my-2">
+                                        <strong>Inscritos: </strong><?php echo $count; ?>
+                                        <button data-bs-toggle="modal" data-bs-target="#registersEvent<?php echo $eventoid; ?>" class='page-title-action mx-1'>Ver inscritos </button>
+                                    </label>
+                                    <br>
+
+                                    <label class="my-2">
+                                        <strong>Evento id: </strong>
+                                        <?php echo $eventoid; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Descripción: </strong><br>
+                                        <?php echo $descripcion; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha y hora de inicio: </strong>
+                                        <?php echo $fechahorainicio->format('d/m/Y h:i');; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha y hora de finalización: </strong>
+                                        <?php echo $fechahorafin->format('d/m/Y h:i');; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Duración: </strong>
+                                        <?php
+
+                                        if ($duracion->y == 1) {
+                                            echo $duracion->y . " año ";
+                                        } else if ($duracion->y > 1) {
+                                            echo $duracion->y . " años ";
+                                        }
+
+                                        if ($duracion->m == 1) {
+                                            echo $duracion->m . " mes ";
+                                        } else if ($duracion->m > 1) {
+                                            echo $duracion->m . " meses ";
+                                        }
+
+                                        if ($duracion->d == 1) {
+                                            echo $duracion->d . " día ";
+                                        } else if ($duracion->d > 1) {
+                                            echo $duracion->d . " dias ";
+                                        }
+
+                                        if ($duracion->h == 1) {
+                                            echo $duracion->h . " hora ";
+                                        } else if ($duracion->h > 1) {
+                                            echo $duracion->h . " horas ";
+                                        }
+
+                                        if ($duracion->i == 1) {
+                                            echo $duracion->i . " minuto ";
+                                        } else if ($duracion->i > 1) {
+                                            echo $duracion->i . " minutos ";
+                                        }
+
+                                        ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Instructor: </strong>
+                                        <?php echo $nameinstructor; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Link event: </strong>
+                                        <?php echo $linkevent; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Link calendario: </strong>
+                                        <?php echo $linkcalendar; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Shortcode: </strong>
+                                        <?php echo $shortcode; ?>
+                                    </label>
+                                    <br>
+                                    <label class="my-2">
+                                        <strong>Fecha de creación: </strong>
+                                        <?php echo $timestamp; ?>
+                                    </label>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------->
+                    <!---MODAL VIEW REGISTRATIONS--->
+                    <div class="modal fade" id="registersEvent<?php echo $eventoid; ?>">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Registros para: <br><?php echo $nombre; ?> [ID: <?php echo $eventoid; ?>]</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <label class="mb-3">Total de registros: <?php echo $count; ?></label>
+                                    <?php
+                                    if (!$count <= 0) {
+                                    ?>
+                                        <div class="d-flex flex-column">
+                                            <div class="row text-bold" style="border-bottom:1px solid lightgrey;border-top:1px solid lightgrey;">
+                                                <div class="col-sm-2 p-3"><strong>Id reg</strong></div>
+                                                <div class="col-sm-2 p-3"><strong>Id usuario</strong></div>
+                                                <div class="col-sm-2 p-3"><strong>Usuario</strong></div>
+                                                <div class="col-sm-3 p-3"><strong>Email</strong></div>
+                                                <div class="col-sm-3 p-3"><strong>Fecha registro</strong></div>
+                                            </div>
+
+                                            <?php
+
+                                            foreach ($list_register as $registers) {
+
+                                                if ($registers['eventid'] == $eventoid) {
+                                                    $user = new WP_User($registers['userid']);
+                                                    /*  $user_phone = get_user_meta($registers['userid'], 'dbem_phone', true); */
+
+                                            ?>
+                                                    <div class="row" style="border-bottom:1px solid lightgrey;">
+                                                        <div class="col-sm-2 p-3"><?php echo $registers['registerid']; ?></div>
+                                                        <div class="col-sm-2 p-3"><?php echo $registers['userid']; ?></div>
+                                                        <div class="col-sm-2 p-3"><?php echo $user->user_nicename; ?></div>
+                                                        <div class="col-sm-3 p-3"><?php echo $user->user_email; ?></div>
+                                                        <div class="col-sm-3 p-3"><?php echo $registers['timestamp']; ?></div>
+                                                    </div>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+
+                                        </div>
+                                    <?php
+                                    } /* fin IF */
+                                    ?>
+
+                                </div>
 
                             </div>
                         </div>
@@ -1002,8 +1368,17 @@ if (empty($list_instructor)) {
                     [SH_ALL_EVENTS]
                 </td>
             </tr>
+            <tr>
+                <td>
+                    Evento del usuario actual
+                </td>
+                <td>
+                    [SH_MY_EVENTS]
+                </td>
+            </tr>
         </tbody>
     </table>
 
     <br><br><br>
 </div>
+<?php 

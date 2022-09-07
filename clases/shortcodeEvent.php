@@ -194,9 +194,10 @@
                             }else{
 
                             $html .= "
+                                    <!--------
                                     <a onclick='$actualClass->eventRegistration($id);'>
                                         <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
-                                    </a>
+                                    </a>-------->
                             ";
                             }
                     }elseif($userId == 0){
