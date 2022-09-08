@@ -237,6 +237,91 @@ if (isset($_POST['editinstructor'])) {
     </div>';
 }
 
+if (isset($_POST['exportdata'])) {
+
+
+    $registers = $wpdb->get_results(" SELECT * FROM $tabla_register", ARRAY_A);
+    $events = $wpdb->get_results(" SELECT * FROM $tabla_shedule", ARRAY_A);
+    $instructors = $wpdb->get_results(" SELECT * FROM $tabla_instructor", ARRAY_A);
+
+    foreach ($registers as $key => $register) {
+
+
+        $nombreevento = '';
+        $fechaevento = '';
+        $instructorid = '';
+        $instructor = '';
+        $eventid = $register['eventid'];
+
+        foreach ($events as $event) {
+            if ($eventid == $event['eventoid']) {
+                $nombreevento = $event['nombre'];
+                $fechaevento = $event['fechahorainicio'];
+                $instructorid = $event['instructorIdAssign'];
+            }
+        }
+
+        foreach ($instructors as $instructor) {
+            if ($instructorid == $instructor['instructorid']) {
+                $instructor = $instructor['nombre'];
+            }
+        }
+
+        $registers[$key]['nombrevento'] = $nombreevento;
+        $registers[$key]['fechaevento'] = $fechaevento;
+        $registers[$key]['instructorid'] = $instructorid;
+        $registers[$key]['instructor'] = $instructor;
+
+        $user = new WP_User($register['userid']);
+        $registers[$key]['nombreinscrito'] = $user->user_login;
+        $registers[$key]['emailinscrito'] = $user->user_email;
+    }
+
+    if (isset($registers)) {
+
+        /*--------------------------*/
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="SH_REGISTER_'. date('Y-m-d').'.csv"');
+
+        ob_end_clean();
+
+        $fp = fopen('php://output', 'w');
+
+        $header_row = array(
+           'Id registro', 'Id evento', 'Nombre del evento', 'Fecha del evento', 'Id instructor','Nombre del instructor', 'Id usuario', 'Nombre del inscrito', 'Email del inscrito','Fecha de registro'
+        );
+
+        fputcsv($fp, $header_row);
+
+        if (!empty($registers)) {
+            foreach ($registers as $row) {
+                $OutputRecord = array(
+                    $row['registerid'],
+                    $row['eventid'],
+                    $row['nombrevento'],
+                    $row['fechaevento'],
+                    $row['instructorid'],
+                    $row['instructor'],
+                    $row['userid'],
+                    $row['nombreinscrito'],
+                    $row['emailinscrito'],
+                    $row['timestamp']
+                );
+                fputcsv($fp, $OutputRecord);
+            }
+        }
+
+        fclose($fp);
+        exit;
+     
+    }
+
+    echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>éxito!</strong> Se han exportado los datos</div>';
+}
+
 $query = "SELECT * FROM $tabla_shedule";
 global $list_shedule;
 $list_shedule = $wpdb->get_results($query, ARRAY_A);
@@ -264,11 +349,24 @@ if (empty($list_register)) {
 
     <h1><?php echo get_admin_page_title(); ?></h1>
 
-    <br><br>
+    <br>
 
     <!-------LISTA DE EVENTOS ACTIVOS--------->
-    <h1 class="wp-heading-inline">Lista de eventos</h1>
-    <a type="button" data-bs-toggle="modal" data-bs-target="#addEvent" class="page-title-action">Añadir nuevo evento</a>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h1 class="wp-heading-inline">Lista de eventos</h1>
+            <a type="button" data-bs-toggle="modal" data-bs-target="#addEvent" class="page-title-action">Añadir nuevo evento</a>
+        </div>
+        <div>
+            <form method="post" action="" enctype="multipart/form-data">
+                <button id="exportdata" name="exportdata" type="submit" class="page-title-action">
+                    Exportar inscritos
+                    <i class="fa-solid fa-file-export"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
 
     <table class="wp-list-table widefat fixed striped pages">
         <thead>
@@ -1381,4 +1479,4 @@ if (empty($list_register)) {
 
     <br><br><br>
 </div>
-<?php 
+<?php

@@ -1,6 +1,10 @@
 <?php
-define('WPINC', 'wp-includes');
+
 require_once ABSPATH . WPINC . '/load.php';
+if(!defined('WPINC')){
+    define('WPINC', 'wp-includes');
+}
+
 // require_once(home_url() . "/wp-load.php");
 // require_once($_SERVER['DOCUMENT_ROOT'] . "/_PROGRAMAS/_UNNA/unna-wordpress/wp-load.php");
     date_default_timezone_set('America/Mexico_City');
