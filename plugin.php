@@ -3,7 +3,7 @@
 Plugin Name: Shedule creator UNNA
 Description:  Creador de itinerarios para UNNA
 Author: cindy ita
-Version: BETA 1.1
+Version: BETA 1.4
 */
 
 if (!defined('ABSPATH')) die();
@@ -28,7 +28,7 @@ register_activation_hook(SHEDULER_DIR, array($principal, "active"));
 
 register_deactivation_hook(SHEDULER_DIR, array($principal, "desactive"));
 
-add_action("admin_bar_menu", "menusuperior", 100);
+add_action("admin_bar_menu", "menusuperior", 50);
 
 function menusuperior($bar)
 {
