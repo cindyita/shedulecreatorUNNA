@@ -259,6 +259,7 @@ if(!defined('WPINC')){
                 }
 
             }
+            /*-----------------------------*/
 
             $html = "
             <script src='https://kit.fontawesome.com/e0df5df9e9.js' crossorigin='anonymous'></script>
@@ -419,6 +420,8 @@ if(!defined('WPINC')){
             $month = $actualClass->converterMonth($dateModal);
             $week = $actualClass->converterWeek($dateModal);
 
+            $checkRegisterModal = $actualClass->searchRegister($idmodal);
+
 
         $html .= "
                         <div class='modal' id='modal$idmodal'>
@@ -465,13 +468,52 @@ if(!defined('WPINC')){
                                         <p>$descripcionModal</p>
                                         <br>
                                         <div>
-                                            <!--------
-                                            <a href=''>
-                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
-                                            </a>--------->
-                                            <a href='$linkCalendarModal' class='ms-2'>
-                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
-                                            </a>
+
+                                            <div class='d-flex gap-1 align-items-center'>
+
+                                    ";
+                                    if ($current_user != 0) {
+                                        if ($checkRegisterModal == 1) {
+                                            $html .= "
+                                                        <a href='$linkevent'>
+                                                            Clase reservada
+                                                        </a>
+                                                ";
+                                        } else {
+
+                                        $html .= "  <form method='post' action=''>
+                                                        <input type='hidden' id='inscripcionid' name='inscripcionid' value='$idmodal'>
+
+                                                        <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$idmodal' name='inscribirse' type='submit' onclick='loading($idmodal)'>inscribirme</button>
+
+                                                        <span id='loading$idmodal' style='display:none;'><div class='spinner-border spinner-border-sm'></div>
+                                                            Inscribiendo...
+                                                        </span>
+                                                    </form>
+
+                                                    <script>
+                                                        function loading(id) {
+                                                            document.getElementById('inscribirse'+id).style.display = 'none';
+                                                            document.getElementById('loading'+id).style.display = 'block';
+                                                        }
+                                                    </script>
+                                            ";
+                                    }
+                                } elseif ($current_user == 0) {
+                                    $html .= "
+                                                        <a href='register'>
+                                                            <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                                        </a>
+                                                            
+                                                        ";
+                                }
+
+                                    $html .= "
+
+                                                <a href='$linkCalendarModal' class='ms-2'>
+                                                    <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
+                                                </a>
+                                            </div>
                                         </div>
                                         <br>
                                     </div>

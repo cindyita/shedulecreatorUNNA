@@ -153,7 +153,29 @@
             return $data[0];
         }
 
+            public function searchRegister($eventid)
+            {
+
+                global $wpdb;
+                $userid = get_current_user_id();
+                $tabla_register = "{$wpdb->prefix}shedule_registrations";
+
+                $query = "SELECT * FROM $tabla_register WHERE userid = $userid";
+                $res = $wpdb->get_results($query, ARRAY_A);
+
+                $return = 0;
+
+                foreach ($res as $value) {
+                    if ($value['eventid'] == $eventid) {
+                        $return = 1;
+                    }
+                }
+                return $return;
+            }
+
         public function eventFromOpen($id,$nombre,$imageLink,$fechahorainicio,$fechahorafin,$nombreInstructor,$imageLinkInstructor,$descripcion,$linkevent,$linkcalendar,$timestamp){
+
+            global $wpdb;
 
             $actualClass = new shortcodeEvent;
             $userId = get_current_user_id();
@@ -164,6 +186,47 @@
             $day = $date->format('d');
             $month = $actualClass->converterMonth($date);
             $week = $actualClass->converterWeek($date);
+
+            /*POST INSCRIPCION*/
+            if (isset($_POST['inscribirse'])) {
+
+                $idins = $_POST['inscripcionid'];
+                $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+                if ($actualClass->searchRegister($idins) != 1) {
+
+                    $userid = get_current_user_id();
+                    $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                    $format = NULL;
+
+                    if (isset($idins)) {
+                        $data = array(
+                            'registerid' => NULL,
+                            'userid' => $userid,
+                            'eventid' => $idins,
+                            'timestamp' => NULL
+                        );
+                    }
+
+                    try {
+                        $wpdb->insert($tabla_register, $data, $format);
+                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+                        sleep(5);
+                        header("Location: $url");
+                    } catch (Exception $e) {
+
+                        echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                    }
+                } else {
+                    echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
+                }
+            }
+            /*----------------*/
+
+            $checkRegister = $actualClass->searchRegister($id);
+            $datecheck = $date->format('d/m/Y');
+            $today = new DateTime();
+            $today = $today->format('d/m/Y');
 
             $html = "
                 <div class='wrap' style='border:1px solid lightgrey;'>
@@ -181,37 +244,60 @@
                         </div>
                         <p>$descripcion</p>
                         <br>
-                        <div>
+                        <div class='d-flex gap-2 align-items-center'>
                     ";
+                    if($datecheck >= $today){
+                            /*-----------------------*/
+                            if ($userId != 0) {
+                                if ($checkRegister == 1) {
+                                    $html .= "
+                                                <a href='$linkevent'>
+                                                    Clase reservada
+                                                </a>
+                                            ";
+                                } else {
 
-                    if($userId != 0){
-                            if($actualClass->searchRegister($id) == true){
-                            $html .= "
-                                    <a href='$linkevent'>
-                                        Clase reservada
-                                    </a>
-                            ";
-                            }else{
+                                    $html .= "  <form method='post' action=''>
+                                                    <input type='hidden' id='inscripcionid' name='inscripcionid' value='$id'>
 
-                            $html .= "
-                                    <!--------
-                                    <a onclick='$actualClass->eventRegistration($id);'>
-                                        <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
-                                    </a>-------->
-                            ";
+                                                    <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
+
+                                                    <span id='loading$id' style='display:none;'><div class='spinner-border spinner-border-sm'></div>
+                                                        Inscribiendo...
+                                                    </span>
+                                                </form>
+
+                                                <script>
+                                                    function loading(id) {
+                                                        document.getElementById('inscribirse'+id).style.display = 'none';
+                                                        document.getElementById('loading'+id).style.display = 'block';
+                                                    }
+                                                </script>
+                                        ";
+                                }
+                            } elseif ($userId == 0) {
+                                $html .= "
+                                            <a href='register'>
+                                                <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                            </a>
+                                                
+                                            ";
                             }
-                    }elseif($userId == 0){
+                        /*-----------------------*/
                         $html .= "
-                                <a href='register'>
-                                    <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
-                                </a>
-                        ";
-                    }
-
-                    $html .= "
                             <a href='$linkcalendar'>
                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
                             </a>
+                         ";
+                        }else{
+                            $html .= "
+                                <a>
+                                    Evento expirado
+                                </a>
+                            ";
+                        }
+
+                    $html .= "
                         </div>
                         <br>
                     </div>
@@ -246,26 +332,6 @@
 
 
             echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
-
-        }
-
-        public function searchRegister($eventid){
-
-            global $wpdb;
-            $userId = get_current_user_id();
-            $tabla_register = "{$wpdb->prefix}shedule_registrations";
-
-            $query = "SELECT $userId FROM $tabla_register ORDER BY eventid DESC limit 1";
-            $res = $wpdb->get_results($query, ARRAY_A);
-
-            $return = false;
-
-            foreach ($res as $value) {
-                if($value['eventid'] == $eventid){
-                    $return = true;
-                }
-            }
-            return $return;
 
         }
 

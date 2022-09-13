@@ -28,10 +28,10 @@
                         <br>
                         <div class='d-flex justify-content-start align-items-center'>
                             <a href='$linkcategoria'>
-                                <button class='btn'style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>registrarme</button>
+                                <button class='btn'style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Ver clases</button>
                             </a>
-                            <a href='$instagramLink'>
-                                <i class='fa-brands fa-instagram mx-1' style='font-size:25pt;'></i>
+                            <a class='ms-2' href='$instagramLink'>
+                                <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png' style='width:35px;height:35px;'>
                             </a>
                             <!----
                             <a href='$whatsapp'>

@@ -29,7 +29,29 @@
             return $data[0];
         }
 
+        public function searchRegister($eventid)
+        {
+
+            global $wpdb;
+            $userid = get_current_user_id();
+            $tabla_register = "{$wpdb->prefix}shedule_registrations";
+
+            $query = "SELECT * FROM $tabla_register WHERE userid = $userid";
+            $res = $wpdb->get_results($query, ARRAY_A);
+
+            $return = 0;
+
+            foreach ($res as $value) {
+                if ($value['eventid'] == $eventid) {
+                    $return = 1;
+                }
+            }
+            return $return;
+        }
+
         public function eventFromOpen($id,$nombre,$imageLink,$fechahorainicio,$fechahorafin,$nombreInstructor,$descripcion,$linkevent,$linkcalendar,$timestamp){
+
+            global $wpdb;
 
             $datestart = new DateTime($fechahorainicio);
             $date = $datestart->format('d/m/Y');
@@ -39,6 +61,46 @@
             $week = $datestart->format('N');   
             $day = $datestart->format('d');
             $hour = $datestart->format('g:i a');
+
+            $current_user = wp_get_current_user();
+            $actualClass = new shortcodeNextSession;
+            $checkRegister = $actualClass->searchRegister($id);
+
+            /*POST INSCRIPCION*/
+            if (isset($_POST['inscribirse'])) {
+
+                $idins = $_POST['inscripcionid'];
+                $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+                if ($actualClass->searchRegister($idins) != 1) {
+
+                    $userid = get_current_user_id();
+                    $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                    $format = NULL;
+
+                    if (isset($idins)) {
+                        $data = array(
+                            'registerid' => NULL,
+                            'userid' => $userid,
+                            'eventid' => $idins,
+                            'timestamp' => NULL
+                        );
+                    }
+
+                    try {
+                        $wpdb->insert($tabla_register, $data, $format);
+                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+                        sleep(5);
+                        header("Location: $url");
+                    } catch (Exception $e) {
+
+                        echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                    }
+                } else {
+                    echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
+                }
+            }
+            /*-----------------------------*/
 
             switch ($week) {
                 case 1:
@@ -133,10 +195,54 @@
                             <p style='line-hight:5pt;color:#2B2B2B;'>$week $day de $month <br> $hour</p>
  
                             </div>
-                            
-                            <a href='$linkcalendar' class='w-50'>
-                                <button class='btn w-100'style='border-radius:20px;background-color:black;color:#EFEDE8;padding 0 8px;border:0;'>agregar a calendario</button>
-                            </a>
+
+                            <div class='d-flex flex-column gap-1 justify-content-center'>
+                            ";
+                            /*------------------------------*/
+                            if ($current_user != 0) {
+
+                                if ($checkRegister == 1) {
+                                    $html .= "
+                                                <a class='w-50' href='$linkevent'>
+                                                    Clase reservada
+                                                </a>
+                                        ";
+                                } else {
+
+
+
+                                $html .= "  <form method='post' action=''>
+                                                <input type='hidden' id='inscripcionid' name='inscripcionid' value='$id'>
+
+                                                <button class='btn w-50' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
+
+                                                <span id='loading$id' style='display:none;'><div class='spinner-border spinner-border-sm'></div>
+                                                    Inscribiendo...
+                                                </span>
+                                            </form>
+
+                                            <script>
+                                                function loading(id) {
+                                                    document.getElementById('inscribirse'+id).style.display = 'none';
+                                                    document.getElementById('loading'+id).style.display = 'block';
+                                                }
+                                            </script>
+                                                            ";
+                                }
+                            } elseif ($current_user == 0) {
+                                $html .= "
+                                            <a class='w-50' href='register'>
+                                                <button class='btn w-100' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                            </a>
+                                        
+                                    ";
+                            }
+                            /*------------------------------*/    
+                            $html .= "     
+                                <a href='$linkcalendar' class='w-50'>
+                                    <button class='btn w-100'style='border-radius:20px;background-color:black;color:#EFEDE8;padding 0 8px;border:0;'>agregar a calendario</button>
+                                </a>
+                            </div>
                         </div>
                     </div>
             ";
