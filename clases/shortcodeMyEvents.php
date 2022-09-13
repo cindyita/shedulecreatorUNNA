@@ -183,7 +183,7 @@
 
             $html = "<div>";
 
-            if(!$e['eventoid']){
+            if(!$e){
 
             $html .= "
                     <div class='w-100 p-4 d-flex justify-content-center'>
