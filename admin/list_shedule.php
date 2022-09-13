@@ -53,30 +53,43 @@ if (isset($_POST['addshedule'])) {
         'shortcode' => $shortcode_g
     );
 
-    try {
 
-        $wpdb->insert($tabla_shedule, $data, $format);
-        /*
-        $my_id = $wpdb->insert_id;
-        print_r('tabla: ' . $tabla_shedule . '| id: ' . $my_id . '<br>');
-        print_r($data);
-        print_r('<br>');
-        print_r($wpdb->show_errors());
-        print_r('<br>');
-        print_r($wpdb->last_query);
-*/
-    } catch (Exception $e) {
+    if($fechahorainicio_g <= $fechahorafin_g){
+
+        try {
+
+            $wpdb->insert($tabla_shedule, $data, $format);
+            /*
+            $my_id = $wpdb->insert_id;
+            print_r('tabla: ' . $tabla_shedule . '| id: ' . $my_id . '<br>');
+            print_r($data);
+            print_r('<br>');
+            print_r($wpdb->show_errors());
+            print_r('<br>');
+            print_r($wpdb->last_query);
+            */
+        } catch (Exception $e) {
+
+            echo '<div id="error-alert" class="alert alert-danger alert-dismissible me-4 mt-4">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>ERROR</strong> ' . $e->getMessage() . '
+            </div>';
+        }
+
+        echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>éxito!</strong> Se ha agregado el evento
+        </div>';
+    
+
+    }else{
 
         echo '<div id="error-alert" class="alert alert-danger alert-dismissible me-4 mt-4">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <strong>ERROR</strong> ' . $e->getMessage() . '
+        <strong>ERROR</strong> La fecha final no puede ser menor a la fecha de inicio
         </div>';
-    }
 
-    echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    <strong>éxito!</strong> Se ha agregado el evento
-    </div>';
+    }
 }
 
 if (isset($_POST['addinstructor'])) {

@@ -47,7 +47,7 @@ jQuery(document).ready(function ($) {
     $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
         $("#success-alert").slideUp(800);
     });
-    $("#error-alert").fadeTo(2000, 500).slideUp(500, function () {
+    $("#error-alert").fadeTo(5000, 500).slideUp(500, function () {
         $("#error-alert").slideUp(800);
     });
 
