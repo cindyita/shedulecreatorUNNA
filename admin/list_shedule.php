@@ -1227,7 +1227,8 @@ if (empty($list_register)) {
 
                             <!-- Modal body -->
                             <div class="modal-body">
-                                ¿Segur@ que quieres eliminar este instructor?
+                                ¿Segur@ que quieres eliminar este instructor?<br>
+                                Si borras un instructor que está ligado a un evento activo, podría generar errores.
                                 <a id="deleteinstructor" data-idinstructor='<?php echo $instructorid; ?>' class="btn btn-danger" class='page-title-action'>ELIMINAR</a>
                                 <br> Puede tardar un rato.
                             </div>

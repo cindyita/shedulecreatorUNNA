@@ -180,7 +180,14 @@
                 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
                 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
             ";
+            if(!$id){
+            $html .= "
+                <div class='wrap d-flex p-4 w-100 justify-content-center align-items-center' style='padding:0 10px;background-color:#f7f6f5;'>
+                    <a>No hay eventos próximos ¡Revisa más tarde!</a>
+                </div>
+            ";
 
+            }else{
             $html .= "
                 <div class='wrap' style='width:100%;padding:0 10px;'>
                     <h1 style='color:#2B2B2B;'>Próxima sesión</h1>
@@ -246,6 +253,7 @@
                         </div>
                     </div>
             ";
+            }
             return $html;
         }
 

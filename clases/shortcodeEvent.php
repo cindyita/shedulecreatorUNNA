@@ -228,7 +228,19 @@
             $today = new DateTime();
             $today = $today->format('d/m/Y');
 
-            $html = "
+            $html = "";
+
+            if(!$id){
+
+            $html .= "
+                    <div class='wrap d-flex justify-content-center align-items-center p-4' style='border:1px solid lightgrey;'>
+                        <a>Este evento ha sido eliminado o el código es incorrecto</a>
+                    </div>
+                ";
+
+            }else{
+
+            $html .= "
                 <div class='wrap' style='border:1px solid lightgrey;'>
                     <div style='width:100%;height:250px;background-image:url($imageLink);background-size:cover;background-position:center center;'>
                     </div>
@@ -238,10 +250,19 @@
                             <p style='line-height:12pt;'>$week $day de $month</p>
                             <p style='line-height:12pt;'>$hour</p>
                         </div>
+                ";
+                if($nombreInstructor){
+                $html .= "
                         <div style='display:flex;align-items:center;'>
                             <img src='$imageLinkInstructor' width='40px' height='40px' style='border-radius:50%;margin-right:10px;margin-bottom:18px;'>
                             <p>$nombreInstructor</p>
                         </div>
+
+                ";
+                }
+
+            $html .= "
+
                         <p>$descripcion</p>
                         <br>
                         <div class='d-flex gap-2 align-items-center'>
@@ -303,6 +324,7 @@
                     </div>
                     
             ";
+            }
             return $html;
         }
 
