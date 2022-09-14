@@ -217,7 +217,7 @@ if(!defined('WPINC')){
         public function eventFromOpen($e,$i){
             global $wpdb;
             $userId = get_current_user_id();
-            $current_user = wp_get_current_user();
+            $current_user = wp_get_current_user()->id;
 
             $actualClass = new shortcodeOverview;
 
@@ -336,7 +336,7 @@ if(!defined('WPINC')){
                                         
                         <div class='swiper-slide d-flex justify-content-center' style='width:100%;'>
 
-                            <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:240px;height:415px;'>
+                            <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:240px;height:415px;border-radius:10px;'>
                                 <a style='position:relative;'>
                                     <h1 style='font-size:30px;'>$week</h1>
                                     ";
@@ -368,8 +368,8 @@ if(!defined('WPINC')){
 
                                         if ($checkRegister == 1) {
                                             $html .= "
-                                                        <a href='$linkevent'>
-                                                            Clase reservada
+                                                        <a href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
+                                                           Clase reservada
                                                         </a>
                                                 ";
                                         } else {
@@ -396,8 +396,8 @@ if(!defined('WPINC')){
                                         }
                                 }elseif($current_user == 0){
                                     $html .= "
-                                                <a href='register'>
-                                                    <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                                <a href='../login'>
+                                                    <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                                 </a>
                                             
                                         ";

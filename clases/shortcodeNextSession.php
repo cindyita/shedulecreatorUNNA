@@ -62,7 +62,7 @@
             $day = $datestart->format('d');
             $hour = $datestart->format('g:i a');
 
-            $current_user = wp_get_current_user();
+            $current_user = wp_get_current_user()->id;
             $actualClass = new shortcodeNextSession;
             $checkRegister = $actualClass->searchRegister($id);
 
@@ -210,7 +210,7 @@
 
                                 if ($checkRegister == 1) {
                                     $html .= "
-                                                <a class='w-50' href='$linkevent'>
+                                                <a class='w-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
                                                     Clase reservada
                                                 </a>
                                         ";
@@ -238,8 +238,8 @@
                                 }
                             } elseif ($current_user == 0) {
                                 $html .= "
-                                            <a class='w-50' href='register'>
-                                                <button class='btn w-100' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                            <a class='w-50' href='../login'>
+                                                <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                             </a>
                                         
                                     ";

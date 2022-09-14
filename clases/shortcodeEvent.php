@@ -272,7 +272,7 @@
                             if ($userId != 0) {
                                 if ($checkRegister == 1) {
                                     $html .= "
-                                                <a href='$linkevent'>
+                                                <a href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
                                                     Clase reservada
                                                 </a>
                                             ";
@@ -298,8 +298,8 @@
                                 }
                             } elseif ($userId == 0) {
                                 $html .= "
-                                            <a href='register'>
-                                                <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                            <a href='../login'>
+                                                <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                             </a>
                                                 
                                             ";

@@ -224,7 +224,10 @@
 
                                 <div class='card-body p-4' style='position:relative;'>
                                     <a data-bs-toggle='modal' data-bs-target='#modal$eventid' style='cursor:pointer;'>
-                                        <img src='$imageLinkevento' style='position:absolute;left:0;top:0;width:25%;height:100%;'>
+                                        <div style='position:absolute;left:0;top:0;width:25%;height:100%;'>
+                                            <img src='$imageLinkevento' style='width:100%;height:100%;object-fit:cover;'>
+                                        </div>
+                                        
                                     </a>
                                     <div class='d-flex justify-content-between align-items-center' style='margin-left:26%;'>
                                         <div class='d-flex flex-column'>
