@@ -29,7 +29,7 @@
             }else{
   
                 $html .= "
-                    <div class='wrap' style='border:1px solid lightgrey;'>
+                    <div class='wrap' style='border:1px solid lightgrey;border-radius:10px;'>
                         <div style='width:100%;height:250px;background-image:url($imageLinkInstructor);background-size:cover;background-position:center center;'>
                         </div>
                         <div style='padding:25px;'>

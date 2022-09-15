@@ -220,12 +220,12 @@
                         }
 
                     $html .= "
-                            <div class='card m-3 d-none d-lg-block'>
+                            <div class='card m-3 d-none d-lg-block' style='border-radius:10px;'>
 
                                 <div class='card-body p-4' style='position:relative;'>
                                     <a data-bs-toggle='modal' data-bs-target='#modal$eventid' style='cursor:pointer;'>
-                                        <div style='position:absolute;left:0;top:0;width:25%;height:100%;'>
-                                            <img src='$imageLinkevento' style='width:100%;height:100%;object-fit:cover;'>
+                                        <div style='position:absolute;left:0;top:0;width:25%;height:100%;border-radius:10px 0 0 10px;'>
+                                            <img src='$imageLinkevento' style='width:100%;height:100%;object-fit:cover;border-radius:10px 0 0 10px;'>
                                         </div>
                                         
                                     </a>
