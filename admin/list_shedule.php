@@ -1440,7 +1440,7 @@ if (empty($list_register)) {
     <table class="wp-list-table widefat fixed striped pages">
         <thead>
             <th>
-                Nombre
+                Descripción
             </th>
             <th>
                 Shortcode
@@ -1450,18 +1450,18 @@ if (empty($list_register)) {
         <tbody id="the-list">
             <tr>
                 <td>
-                    Evento
+                    Evento individual
                 </td>
                 <td>
-                    [SH_EVENT id='{ID FROM EVENT}'] Example: [SH_EVENT id='14']
+                    [SH_EVENT id='{ID FROM EVENT}'] Example: [SH_EVENT id='5']
                 </td>
             </tr>
             <tr>
                 <td>
-                    Instructor
+                    Instructor individual
                 </td>
                 <td>
-                    [SH_INSTRUCTOR id='{ID FROM INSTRUCTOR}'] Example: [SH_INSTRUCTOR id='5']
+                    [SH_INSTRUCTOR id='{ID FROM INSTRUCTOR}'] Example: [SH_INSTRUCTOR id='2']
                 </td>
             </tr>
             <tr>
@@ -1474,7 +1474,7 @@ if (empty($list_register)) {
             </tr>
             <tr>
                 <td>
-                    Overview todos los eventos
+                    Overview de todos los eventos
                 </td>
                 <td>
                     [SH_ALL_EVENTS]
@@ -1482,7 +1482,7 @@ if (empty($list_register)) {
             </tr>
             <tr>
                 <td>
-                    Evento del usuario actual
+                    Eventos al que está inscrito el usuario
                 </td>
                 <td>
                     [SH_MY_EVENTS]
