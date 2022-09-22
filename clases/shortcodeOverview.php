@@ -280,7 +280,7 @@ if(!defined('WPINC')){
                 <div class='w-100'>
                 <div class='wrap' style='display:flex;padding:0 10px;'>
 
-                    <div class='swiper swipersheduleoverview' style='width:77%;'>
+                    <div class='swiper swipersheduleoverview' style='width:100%;'>
                         <div class='swiper-wrapper px-5'>
                         
                 ";
@@ -334,9 +334,9 @@ if(!defined('WPINC')){
 
                         $html .= "
                                         
-                        <div class='swiper-slide d-flex justify-content-center' style='width:100%;'>
+                        <div class='swiper-slide d-flex justify-content-center' style='width:90%;'>
 
-                            <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:240px;height:415px;border-radius:10px;'>
+                            <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:260px;height:450px;border-radius:10px;'>
                                 <a style='position:relative;'>
                                     <h1 style='font-size:30px;'>$week</h1>
                                     ";
@@ -404,7 +404,7 @@ if(!defined('WPINC')){
                                 }
 
                         $html .= "
-                            </div>
+                            </div><br>
                                 </div> <!----Fin slider---->
 
                         "; 

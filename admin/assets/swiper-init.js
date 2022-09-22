@@ -8,19 +8,19 @@ var swiper = new Swiper(".swipersheduleoverview", {
         },
         768: {
             slidesPerView: 3,
-            spaceBetween: 4,
+            spaceBetween: 2,
         },
         1024: {
             slidesPerView: 3,
-            spaceBetween: 4,
+            spaceBetween: 2,
         },
         1400: {
             slidesPerView: 5,
-            spaceBetween: 4,
+            spaceBetween: 2,
         },
         1920: {
-            slidesPerView: 6,
-            spaceBetween: 4,
+            slidesPerView: 5,
+            spaceBetween: 2,
         },
     },
     navigation: {
