@@ -1,9 +1,11 @@
 <?php
 /*
-Plugin Name: Shedule creator UNNA
-Description:  Creador de itinerarios para UNNA
-Author: cindy ita
-Version: BETA 1.5.3
+Plugin Name: Shedule creator
+Description:  Creador de itinerarios y eventos: Profesores, inscripciones y más.
+Author: Cindy ita
+Author URL: https://www.cindyita.com
+Version: BETA 1.6.0
+Text Domain: shedule-creator-by-cindyita
 */
 
 if (!defined('ABSPATH')) die();
@@ -21,6 +23,7 @@ require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeInstructor.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeNextSession.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverview.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeMyEvents.php';
+require_once SHEDULER_PLUGIN_DIR . '/admin/register_manager.php';
 
 $principal = new principal;
 
@@ -42,7 +45,9 @@ $bar->add_menu(array(
 "href" => SHEDULER_DIR . "?page=sp_menu_ajustes",
 "parent" => "new-content"
 ));
+
 }
+
 
 add_action("admin_menu", "createmenu");
 
@@ -61,23 +66,17 @@ plugin_dir_url(__FILE__) . 'admin/img/shedule.png', //icon
 '3' //position
 );
 
-/*
+
 add_submenu_page(
-"sp_menu", //parent slug
-"Nuevo evento", //titulo pagina
-"Nuevo evento", //titulo menu
+plugin_dir_path(__FILE__) . 'admin/list_shedule.php', //parent slug
+"Registers manager", //titulo pagina
+"Registers manager", //titulo menu
 "manage_options", //capability
 "sp_menu_ajustes", //nombre
-"nuevoevento" //funcion
+"registersManager" //funcion
 );
-*/
-}
 
-/*
-function nuevoevento(){
-echo "<h1>Crear nuevo evento</h1>";
 }
-*/
 
 // Enqueu script
 

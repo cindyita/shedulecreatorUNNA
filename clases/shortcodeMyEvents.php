@@ -181,7 +181,13 @@
             $linkcalendar = null;
             $instructorid = null;
 
-            $html = "<div>";
+            $html = "
+                <script src='https://kit.fontawesome.com/e0df5df9e9.js' crossorigin='anonymous'></script>
+                <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
+                <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
+            ";
+
+            $html .= "<div>";
 
             if(!$e){
 
@@ -237,7 +243,7 @@
                                             <span class='text-muted small'>$week $day de $month a las $hour | $duracion</span>
                                         </div>
                                         <div class='d-flex gap-2'>
-                                            <a href='$imageLinkevento'>
+                                            <a href='$linkevent'>
                                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Entrar</button>
                                             </a>
                                         </diV>

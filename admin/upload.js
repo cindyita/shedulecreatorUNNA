@@ -64,37 +64,43 @@ jQuery(document).ready(function ($) {
 
 });
 
-/*upload EDIT 1*/
+/*upload image EDIT EVENT*/
 
 jQuery(document).ready(function ($) {
-    var mediaUploader;
 
-    $('#upload-button3').click(function (e) {
-        e.preventDefault();
+    Array.from(document.querySelector("#chooseEventEdit").options).forEach(function (option_element) {
+        let option_value = option_element.value;
+        let mediaUploader;
 
-        if (mediaUploader) {
+        $('#uploadButtonEdit' + option_value).click(function (e) {
+            e.preventDefault();
+            
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+
+            mediaUploader = wp.media.frames.file_frame = wp.media({
+                title: 'Escoger imagen',
+                button: {
+                    text: 'Escoger imagen'
+                },
+                multiple: false
+            });
+
+            mediaUploader.on('select', function () {
+                attachment = mediaUploader.state().get('selection').first().toJSON();
+                $('#imageUrlEdit' + option_value).val(attachment.url);
+                document.getElementById("image-preview-event-edit" + option_value).src = attachment.url;
+            });
+
             mediaUploader.open();
-            return;
-        }
-
-        mediaUploader = wp.media.frames.file_frame = wp.media({
-            title: 'Choose Image',
-            button: {
-                text: 'Choose Image'
-            },
-            multiple: false
         });
 
-        mediaUploader.on('select', function () {
-            attachment = mediaUploader.state().get('selection').first().toJSON();
-            $('#image-url3').val(attachment.url);
-            document.getElementById("image-preview-event-edit").src = attachment.url;
-        });
-
-        mediaUploader.open();
     });
 
 });
+
 
 /*upload EDIT 2*/
 

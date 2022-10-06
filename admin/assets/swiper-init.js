@@ -3,11 +3,11 @@ var swiper = new Swiper(".swipersheduleoverview", {
     spaceBetween: 3,
     breakpoints: {
         640: {
-            slidesPerView: 2,
-            spaceBetween: 2,
+            slidesPerView: 1,
+            spaceBetween: 0,
         },
         768: {
-            slidesPerView: 3,
+            slidesPerView: 2,
             spaceBetween: 2,
         },
         1024: {
