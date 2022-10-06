@@ -281,7 +281,7 @@ if(!defined('WPINC')){
                 <div class='wrap' style='display:flex;padding:0 10px;'>
 
                     <div class='swiper swipersheduleoverview' style='width:100%;'>
-                        <div class='swiper-wrapper px-0 px-lg-5 d-flex'>
+                        <div class='swiper-wrapper px-2 px-lg-5 d-flex'>
                         
                 ";
 
@@ -361,7 +361,8 @@ if(!defined('WPINC')){
                                 <hr>
                                 <div style='width:20%;height:2px;background-color:#8A7E71;'></div>
                                 <p style='color:#8A7E71;font-size:14pt;'>$duraciondate</p>
-                                    
+                                
+                                <div class='d-flex flex-column flex-lg-row'>
                                     ";
                             
                         if($current_user != 0){
@@ -404,8 +405,10 @@ if(!defined('WPINC')){
                                 }
 
                         $html .= "
-                            </div><br>
-                                </div> <!----Fin slider---->
+                                </div>
+
+                                </div><br>
+                                    </div> <!----Fin slider---->
 
                         "; 
                     }      
@@ -450,7 +453,7 @@ if(!defined('WPINC')){
                                         <div style='width:100%;height:280px;background-image:url($imageLinkModal);background-size:cover;background-position:center center;'>
                                         </div>
 
-                                        <div style='padding:50px;'>
+                                        <div class='p-2 p-lg-4'>
                                             <div class='d-flex flex-column'>
                                                 <h1 style='font-size:25pt'>$nombreModal</h1>
                                                 <p style='line-height:12pt;'>$week $day de $month</p>
@@ -566,7 +569,7 @@ if(!defined('WPINC')){
                                         <div style='width:100%;height:400px;background-image:url($imageInsModal);background-size:cover;background-position:center center;'>
                                         </div>
 
-                                        <div style='padding:50px;'>
+                                        <div class='p-2 p-lg-4'>
                                             <div class='d-flex flex-column'>
                                                 <h1 style='font-size:25pt'>$nameInsModal</h1>
                                                 <p style='line-height:12pt;'>$cargoInsModal</p>
