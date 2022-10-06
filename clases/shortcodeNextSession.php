@@ -203,14 +203,14 @@
  
                             </div>
 
-                            <div class='d-flex flex-column gap-1 justify-content-center'>
+                            <div class='d-flex flex-row flex-lg-column gap-1 justify-content-center'>
                             ";
                             /*------------------------------*/
                             if ($current_user != 0) {
 
                                 if ($checkRegister == 1) {
                                     $html .= "
-                                                <a class='w-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
+                                                <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
                                                     Clase reservada
                                                 </a>
                                         ";
@@ -218,10 +218,10 @@
 
 
 
-                                $html .= "  <form method='post' action=''>
+                                $html .= "  <form method='post' action='' class='w-50'>
                                                 <input type='hidden' id='inscripcionid' name='inscripcionid' value='$id'>
 
-                                                <button class='btn w-50' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
+                                                <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
 
                                                 <span id='loading$id' style='display:none;'><div class='spinner-border spinner-border-sm'></div>
                                                     Inscribiendo...
@@ -238,7 +238,7 @@
                                 }
                             } elseif ($current_user == 0) {
                                 $html .= "
-                                            <a class='w-50' href='../login'>
+                                            <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='../login'>
                                                 <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                             </a>
                                         

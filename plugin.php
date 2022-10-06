@@ -4,7 +4,7 @@ Plugin Name: Shedule creator
 Description:  Creador de itinerarios y eventos: Profesores, inscripciones y más.
 Author: Cindy ita
 Author URL: https://www.cindyita.com
-Version: BETA 1.6.0
+Version: BETA 1.6.1
 Text Domain: shedule-creator-by-cindyita
 */
 

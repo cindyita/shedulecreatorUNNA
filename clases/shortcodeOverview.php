@@ -281,7 +281,7 @@ if(!defined('WPINC')){
                 <div class='wrap' style='display:flex;padding:0 10px;'>
 
                     <div class='swiper swipersheduleoverview' style='width:100%;'>
-                        <div class='swiper-wrapper px-5'>
+                        <div class='swiper-wrapper px-0 px-lg-5 d-flex'>
                         
                 ";
 
@@ -490,7 +490,7 @@ if(!defined('WPINC')){
                                             if ($checkRegisterModal == 1) {
                                                 $html .= "
                                                             <a href='$linkevent'>
-                                                                Clase reservada
+                                                                Entrar a la sesión
                                                             </a>
                                                     ";
                                             } else {
