@@ -28,3 +28,9 @@ var swiper = new Swiper(".swipersheduleoverview", {
         prevEl: ".swiper-button-prev",
     }
 });
+var swiper = new Swiper('.swipersheduleMobile', {
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+    },
+});

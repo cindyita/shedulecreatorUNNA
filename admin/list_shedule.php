@@ -1654,6 +1654,14 @@ if (empty($list_register)) {
             </tr>
             <tr>
                 <td>
+                    Overview de todos los eventos versión móviles
+                </td>
+                <td>
+                    [SH_ALL_EVENTS_MOBILE]
+                </td>
+            </tr>
+            <tr>
+                <td>
                     Eventos al que está inscrito el usuario
                 </td>
                 <td>

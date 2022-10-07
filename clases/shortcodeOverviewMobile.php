@@ -9,7 +9,7 @@ if(!defined('WPINC')){
 // require_once($_SERVER['DOCUMENT_ROOT'] . "/_PROGRAMAS/_UNNA/unna-wordpress/wp-load.php");
     date_default_timezone_set('America/Mexico_City');
 
-    class shortcodeOverview{
+    class shortcodeOverviewMobile{
 
         public function getEvents(){
             global $wpdb;
@@ -214,170 +214,167 @@ if(!defined('WPINC')){
                 return $return;
             }
 
-        public function eventFromOpen($e,$i){
-            global $wpdb;
-            $userId = get_current_user_id();
-            $current_user = wp_get_current_user()->id;
+    public function eventFromOpen($e, $i)
+    {
+        global $wpdb;
+        $userId = get_current_user_id();
+        $current_user = wp_get_current_user()->id;
 
-            $actualClass = new shortcodeOverview;
+        $actualClass = new shortcodeOverview;
 
 
-            /*POST INSCRIPCION*/
-            if (isset($_POST['inscribirse'])) {
+        /*POST INSCRIPCION*/
+        if (isset($_POST['inscribirse'])) {
 
-                $idins = $_POST['inscripcionid'];
-                $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+            $idins = $_POST['inscripcionid'];
+            $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
-                if($actualClass->searchRegister($idins) != 1){
+            if ($actualClass->searchRegister($idins) != 1) {
 
-                    $userid = get_current_user_id();
-                    $tabla_register = "{$wpdb->prefix}shedule_registrations";
-                    $format = NULL;
+                $userid = get_current_user_id();
+                $tabla_register = "{$wpdb->prefix}shedule_registrations";
+                $format = NULL;
 
-                    if (isset($idins)) {
-                        $data = array(
-                            'registerid' => NULL,
-                            'userid' => $userid,
-                            'eventid' => $idins,
-                            'timestamp' => NULL
-                        );
-                    }
-
-                    try {
-                        $wpdb->insert($tabla_register, $data, $format);
-                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
-                        sleep(5);
-                        header("Location: $url");
-            
-                    } catch (Exception $e) {
-
-                        echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
-                    }
-
-                }else{
-                    echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
+                if (isset($idins)) {
+                    $data = array(
+                        'registerid' => NULL,
+                        'userid' => $userid,
+                        'eventid' => $idins,
+                        'timestamp' => NULL
+                    );
                 }
 
+                try {
+                    $wpdb->insert($tabla_register, $data, $format);
+                    echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+                    sleep(5);
+                    header("Location: $url");
+                } catch (Exception $e) {
+
+                    echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
+                }
+            } else {
+                echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
             }
+        }
         /*-----------------------------*/
 
-            $html = "";
+        $html = "";
 
-            if(!$e){
+        if (!$e) {
             $html .= "
                 <div class='wrap W-100 d-flex justify-content-center align-items-center p-4' style='background-color:#f7f6f5;'>
                     <a>Por el momento no hay eventos activos</a>
                 </div>
             ";
+        } else {
 
-            }else{
-
-                $html .= "
+            $html .= "
                 <script src='https://kit.fontawesome.com/e0df5df9e9.js' crossorigin='anonymous'></script>
                 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
                 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
 
-                <div class='w-100'>
-                <div class='wrap px-0 px-lg-2'>
+                <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css'/>
 
-                    <div class='swiper swipersheduleoverview' style='width:100%;'>
-                        <div class='swiper-wrapper px-2 px-lg-5'>
+                <div class='w-100'>
+                <div class='w-100'>
+
+                    <div class='swiper swipersheduleMobile class='w-100' h-100'>
+                        <div class='swiper-wrapper'>
                         
                 ";
 
-                foreach ($e as $key => $value) {
+            foreach ($e as $key => $value) {
 
-                    $id = $value['eventoid'];
-                    $nombre = $value['nombre'];
-                    $linkevent = $value['linkevent'];
-                    $instructorIdAssign = $value['instructorIdAssign'];
+                $id = $value['eventoid'];
+                $nombre = $value['nombre'];
+                $linkevent = $value['linkevent'];
+                $instructorIdAssign = $value['instructorIdAssign'];
 
-                    $datestart = $value['fechahorainicio'];
-                    $datestart = new DateTime($datestart);
-                    $dateend = $value['fechahorafin'];
-                    $dateend = new DateTime($dateend);
-                    $duracion = $datestart->diff($dateend);
+                $datestart = $value['fechahorainicio'];
+                $datestart = new DateTime($datestart);
+                $dateend = $value['fechahorafin'];
+                $dateend = new DateTime($dateend);
+                $duracion = $datestart->diff($dateend);
 
-                    $day = $datestart->format('d');
-                    $hour = $datestart->format('g:i a');
-                    $date = $datestart->format('d/m/Y');
+                $day = $datestart->format('d');
+                $hour = $datestart->format('g:i a');
+                $date = $datestart->format('d/m/Y');
 
-                    $month = $actualClass->converterMonth($datestart);
-                    $week = $actualClass->converterWeek($datestart);
-                    $duraciondate = $actualClass->converterDuration($duracion);
+                $month = $actualClass->converterMonth($datestart);
+                $week = $actualClass->converterWeek($datestart);
+                $duraciondate = $actualClass->converterDuration($duracion);
 
-                    $checkRegister = $actualClass->searchRegister($id);
+                $checkRegister = $actualClass->searchRegister($id);
 
-                    foreach ($i as $key => $valuei) {
+                foreach ($i as $key => $valuei) {
 
-                        $idInstructor = $valuei['instructorid'];
+                    $idInstructor = $valuei['instructorid'];
 
-                        if($idInstructor == $instructorIdAssign){
+                    if ($idInstructor == $instructorIdAssign) {
 
-                            $nameInstructor = $valuei['nombre'];
-                            $imageInstructor = $valuei['imageLink'];
-
-                        }
-                        
+                        $nameInstructor = $valuei['nombre'];
+                        $imageInstructor = $valuei['imageLink'];
                     }
+                }
 
-                    $today = new DateTime();
-                    $todayFormat = $today->format('d/m/Y');
-                
+                $today = new DateTime();
+                $todayFormat = $today->format('d/m/Y');
 
-                    if($date == $todayFormat){
-                        $week = 'Hoy';
-                    }
-                    
 
-                    if($datestart >= $today){
+                if ($date == $todayFormat) {
+                    $week = 'Hoy';
+                }
 
-                        $html .= "
+
+                if ($datestart >= $today) {
+
+                    $html .= "
                                         
-                        <div class='swiper-slide d-flex justify-content-center' style='width:90%;'>
+                        <div class='swiper-slide d-flex justify-content-center'>
 
                             <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:260px;height:450px;border-radius:10px;'>
                                 <a style='position:relative;'>
                                     <h1 style='font-size:30px;'>$week</h1>
                                     ";
 
-                                if ($week != 'Hoy') {
-                                    $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;position:absolute;top:25px;'>$day de $month</p>";
-                                }
+                    if ($week != 'Hoy') {
+                        $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;position:absolute;top:25px;'>$day de $month</p>";
+                    }
 
-                        $html .= "
+                    $html .= "
                                 </a>
                                 <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour</h1>
                                 <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre</p>
                                 ";
-                        if($nameInstructor){
-                            $html .="
+                    if ($nameInstructor) {
+                        $html .= "
                                     <a style='cursor:pointer;' data-bs-toggle='modal' data-bs-target='#modalInstructor$instructorIdAssign'>
                                     <p><img src='$imageInstructor' style='width:50px;height:50px;border-radius:50%;margin-right:5px;'> $nameInstructor</p>
                                     </a>
                             ";
-                        }
-                        $html .= "
+                    }
+                    $html .= "
                                 <hr>
                                 <div style='width:20%;height:2px;background-color:#8A7E71;'></div>
                                 <p style='color:#8A7E71;font-size:14pt;'>$duraciondate</p>
                                 
                                 <div class='d-flex flex-column flex-lg-row'>
                                     ";
-                            
-                        if($current_user != 0){
 
-                                        if ($checkRegister == 1) {
-                                            $html .= "
+                    if ($current_user != 0) {
+
+                        if ($checkRegister == 1) {
+                            $html .= "
                                                         <a href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
                                                            Entrar a la sesión
                                                         </a>
                                                 ";
-                                        } else {
+                        } else {
 
-                                            
 
-                                            $html .= "  <form method='post' action=''>
+
+                            $html .= "  <form method='post' action=''>
                                                             <input type='hidden' id='inscripcionid' name='inscripcionid' value='$id'>
 
                                                             <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$id' name='inscribirse' type='submit' onclick='loading($id)'>inscribirme</button>
@@ -394,32 +391,40 @@ if(!defined('WPINC')){
                                                             }
                                                         </script>
                                                 ";
-                                        }
-                                }elseif($current_user == 0){
-                                    $html .= "
+                        }
+                    } elseif ($current_user == 0) {
+                        $html .= "
                                                 <a href='../login'>
                                                     <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                                 </a>
                                             
                                         ";
-                                }
+                    }
 
-                        $html .= "
+                    $html .= "
                                 </div>
 
                                 </div><br>
                                     </div> <!----Fin slider---->
 
-                        "; 
-                    }      
-                
+                        ";
                 }
+            }
 
             $html .= "
                             </div>
-                                <div class='swiper-button-next'></div>
-                                <div class='swiper-button-prev'></div>
+
+                            <div class='w-100 d-flex justify-content-center mt-4'>
+                                <div class='swiper-pagination'></div>
                             </div>
+                            <style>
+                            .swiper-pagination-bullet-active {
+                                background:black;
+                                }
+                            </style>
+                                
+                            </div>
+                          
                 ";
 
 
@@ -440,7 +445,7 @@ if(!defined('WPINC')){
                 $checkRegisterModal = $actualClass->searchRegister($idmodal);
 
 
-            $html .= "
+                $html .= "
                             <div class='modal' id='modal$idmodal'>
                                 <div class='modal-dialog modal-dialog-centered modal-lg'>
                                     <div class='modal-content' style='border-radius:0;'>
@@ -461,16 +466,16 @@ if(!defined('WPINC')){
                                             </div>
                                     ";
 
-                                    foreach ($i as $valuein) {
+                foreach ($i as $valuein) {
 
-                                        $idInstructor = $valuein['instructorid'];
+                    $idInstructor = $valuein['instructorid'];
 
-                                        if ($idInstructor == $idInstructorModal) {
+                    if ($idInstructor == $idInstructorModal) {
 
-                                            $nameInstructorModal = $valuein['nombre'];
-                                            $imageInstructorModal = $valuein['imageLink'];
+                        $nameInstructorModal = $valuein['nombre'];
+                        $imageInstructorModal = $valuein['imageLink'];
 
-                                    $html .= "
+                        $html .= "
 
                                             <div style='display:flex;align-items:center;'>
                                                 <img src='$imageInstructorModal' style='border-radius:50%;width:45px;height:45px;margin-right:10px;margin-bottom:18px;'>
@@ -478,9 +483,9 @@ if(!defined('WPINC')){
                                             </div>
 
                                     ";
-                                        }
-                                    }
-                                    $html .= "
+                    }
+                }
+                $html .= "
 
                                             <p>$descripcionModal</p>
                                             <br>
@@ -489,16 +494,16 @@ if(!defined('WPINC')){
                                                 <div class='d-flex gap-1 align-items-center'>
 
                                         ";
-                                        if ($current_user != 0) {
-                                            if ($checkRegisterModal == 1) {
-                                                $html .= "
+                if ($current_user != 0) {
+                    if ($checkRegisterModal == 1) {
+                        $html .= "
                                                             <a href='$linkevent'>
                                                                 Entrar a la sesión
                                                             </a>
                                                     ";
-                                            } else {
+                    } else {
 
-                                            $html .= "  <form method='post' action=''>
+                        $html .= "  <form method='post' action=''>
                                                             <input type='hidden' id='inscripcionid' name='inscripcionid' value='$idmodal'>
 
                                                             <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;' id='inscribirse$idmodal' name='inscribirse' type='submit' onclick='loading($idmodal)'>inscribirme</button>
@@ -515,17 +520,17 @@ if(!defined('WPINC')){
                                                             }
                                                         </script>
                                                 ";
-                                        }
-                                    } elseif ($current_user == 0) {
-                                        $html .= "
+                    }
+                } elseif ($current_user == 0) {
+                    $html .= "
                                                             <a href='register'>
                                                                 <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
                                                             </a>
                                                                 
                                                             ";
-                                    }
+                }
 
-                                        $html .= "
+                $html .= "
 
                                                     <a href='$linkCalendarModal' class='ms-2'>
                                                         <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
@@ -544,20 +549,20 @@ if(!defined('WPINC')){
             ";
             }
 
-                foreach ($i as $valueins) {
+            foreach ($i as $valueins) {
 
-                    $idInsModal = $valueins['instructorid'];
+                $idInsModal = $valueins['instructorid'];
 
-                    $nameInsModal = $valueins['nombre'];
-                    $imageInsModal = $valueins['imageLink'];
-                    $descInsModal = $valueins['descripcion'];
-                    $cargoInsModal = $valueins['cargo'];
-                    $whatsInsModal = $valueins['whatsapp'];
-                    $instaInsModal = $valueins['instagramLink'];
-                    $linkcategoriaInsModal = $valueins['linkcategoria'];
+                $nameInsModal = $valueins['nombre'];
+                $imageInsModal = $valueins['imageLink'];
+                $descInsModal = $valueins['descripcion'];
+                $cargoInsModal = $valueins['cargo'];
+                $whatsInsModal = $valueins['whatsapp'];
+                $instaInsModal = $valueins['instagramLink'];
+                $linkcategoriaInsModal = $valueins['linkcategoria'];
 
 
-            $html .= "
+                $html .= "
                             <div class='modal' id='modalInstructor$idInsModal'>
                                 <div class='modal-dialog modal-dialog-centered modal-lg'>
                                     <div class='modal-content' style='border-radius:0;'>
@@ -597,8 +602,8 @@ if(!defined('WPINC')){
             }
         }
 
-            return $html;
-        }
+        return $html;
+    }
 
         public function eventFromClose(){
             $html = "
@@ -606,11 +611,21 @@ if(!defined('WPINC')){
             </div>
             </div>
 
+            <script src='https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js'></script>
+            <script>
+                var swiper = new Swiper('.swipersheduleMobile', {
+                    pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                    },
+                });
+                </script>
+
             ";
             return $html;
         }
 
-        function showOverview(){
+        function showOverviewMobile(){
 
             $e = $this->getEvents();
             $i = $this->getInstructors();

@@ -4,7 +4,7 @@ Plugin Name: Shedule creator
 Description:  Creador de itinerarios y eventos: Profesores, inscripciones y más.
 Author: Cindy ita
 Author URL: https://www.cindyita.com
-Version: BETA 1.6.1
+Version: BETA 1.6.4
 Text Domain: shedule-creator-by-cindyita
 */
 
@@ -22,6 +22,7 @@ require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeEvent.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeInstructor.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeNextSession.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverview.php';
+require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverviewMobile.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeMyEvents.php';
 require_once SHEDULER_PLUGIN_DIR . '/admin/register_manager.php';
 
@@ -135,6 +136,16 @@ return true;
 
 add_action('wp_ajax_deleteinstructor', 'deleteinstructor');
 
+//swiper
+function ls_scripts_styles()
+{
+    wp_enqueue_style('swipercssbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.css', array(), '6.4.11', 'all');
+    wp_enqueue_script('swiperjsbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.js', array(), '6.4.11', true);
+    wp_enqueue_script('swiperinit', plugin_dir_url(__FILE__) . '/admin/assets/swiper-init.js', array('swiperjsbundle'), '1.0.0', true);
+}
+
+add_action('admin_enqueue_scripts', 'ls_scripts_styles');
+
 //Shortcodes
 
 function showShortcodeEvent($atts)
@@ -175,18 +186,22 @@ return $html;
 
 add_shortcode("SH_ALL_EVENTS", "showOverview");
 
+function showOverviewMobile()
+{
+    $_shortcode = new shortcodeOverviewMobile;
+    $html = $_shortcode->showOverviewMobile();
+    return $html;
+}
+
+add_shortcode("SH_ALL_EVENTS_MOBILE", "showOverviewMobile");
+/*---*/
+
 add_action('wp_enqueue_scripts', 'ls_scripts_styles', 20);
+
 /**
  * SwiperJS Scripts
  */
-function ls_scripts_styles()
-{
-    wp_enqueue_style('swipercssbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.css', array(), '6.4.11', 'all');
-    wp_enqueue_script('swiperjsbundle', plugin_dir_url(__FILE__) . '/admin/assets/swiper-bundle.min.js', array(), '6.4.11', true);
-    wp_enqueue_script('swiperinit', plugin_dir_url(__FILE__) . '/admin/assets/swiper-init.js', array('swiperjsbundle'), '1.0.0', true);
-}
 
-add_action('admin_enqueue_scripts', 'ls_scripts_styles');
 /*
 function EncolarJS($hook)
 {

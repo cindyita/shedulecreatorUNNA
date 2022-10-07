@@ -211,7 +211,7 @@
                                 if ($checkRegister == 1) {
                                     $html .= "
                                                 <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
-                                                    Clase reservada
+                                                    Entrar a la sesión
                                                 </a>
                                         ";
                                 } else {
