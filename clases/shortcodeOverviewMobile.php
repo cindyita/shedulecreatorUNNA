@@ -394,7 +394,7 @@ if(!defined('WPINC')){
                         }
                     } elseif ($current_user == 0) {
                         $html .= "
-                                                <a href='../login'>
+                                                <a href='https://somosunna.com/unna-studio/'>
                                                     <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                                 </a>
                                             

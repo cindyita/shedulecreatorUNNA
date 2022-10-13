@@ -238,7 +238,7 @@
                                 }
                             } elseif ($current_user == 0) {
                                 $html .= "
-                                            <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='../login'>
+                                            <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='https://somosunna.com/unna-studio/'>
                                                 <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                             </a>
                                         
