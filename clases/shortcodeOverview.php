@@ -338,13 +338,13 @@ if(!defined('WPINC')){
                                         
                         <div class='swiper-slide d-flex justify-content-center' style='width:90%;'>
 
-                            <div style='position:relative;padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:260px;height:450px;border-radius:10px;'>
-                                <a style='position:relative;'>
-                                    <h1 style='font-size:30px;'>$week</h1>
+                            <div style='padding:20px;margin:5px;box-shadow:0 0 6px 1px rgba(0,0,0,0.2);background-color:#F1F0EA;width:260px;height:450px;border-radius:10px;'>
+                                <a sytle='line-height:19px;'>
+                                    <h1 style='font-size:30px;line-height:19px;'>$week</h1>
                                     ";
 
                                 if ($week != 'Hoy') {
-                                    $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;position:absolute;top:27px;left:0;'>$day de $month</p>";
+                                    $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;line-height:0;'>$day de $month</p>";
                                 }
 
                         $html .= "
