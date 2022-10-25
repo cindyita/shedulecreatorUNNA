@@ -210,6 +210,8 @@
 
             $html .= "<div>";
 
+            $count = 0;
+
             if(!$e){
 
             $html .= "
@@ -245,7 +247,7 @@
                                 $duracion = $actualClass->converterDuration($duracion);
 
                         if ($dateend >= $today) {
-                            
+                            $count++;
 
                     $html .= "
                             <div class='cardClase card m-3 d-none d-lg-block' style='border-radius:10px;'>
@@ -325,7 +327,7 @@
                                             <div class='d-flex flex-column'>
                                                 <h1 style='font-size:25pt'>$nombreEvento</h1>
                                                 <p style='line-height:12pt;'>$week $day de $month</p>
-                                                <p style='line-height:12pt;'>$hour</p>
+                                                <p style='line-height:12pt;'>$hour <span style='font-size:9pt;color:grey;'>(hora CDMX)</span></p>
                                             </div>
                                     ";
 
@@ -406,6 +408,15 @@
                         } /* fin IF event = register */
                     } /*fin FOR events*/
                 } /*fin FOR registers*/
+                
+                if ($count == 0) {
+                    $html .= "
+                                <div style='color:#8d7e6f;' class='w-100 p-4 d-flex justify-content-start'>
+                                    <a>Aún no te inscribes a ningún evento o ya han caducado.</a>
+                                </div>
+                        ";
+                }
+
             }
                 
             return $html;

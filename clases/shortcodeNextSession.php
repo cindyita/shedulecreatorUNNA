@@ -68,26 +68,24 @@
 
             if (isset($_GET['msgnext']) && $_GET['msgnext'] == 'success') {
                 echo "
-                    <div class='modal' id='registroexitoso'>
+                    <div class='modal' id='registroexitoso2'>
                         <div class='modal-dialog'>
                             <div class='modal-content'>
 
-                            <!-- Modal Header -->
                             <div class='modal-header'>
-                                <h4 class='modal-title'>se ha reservado tu clase</h4>
+                                <h4 class='ms-5 ps-4 pt-2'>se ha reservado tu clase</h4>
                                 <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
                             </div>
-
-                            <!-- Modal body -->
-                            <div class='modal-body'>
-                                Puedes ver tu registro y entrar a la clase en la página de tu perfil.
+                            
+                            <div class='modal-body text-center'>
+                                Puedes ver tus clases reservadas y el link de acceso en la página de <a href='https://somosunna.com/mi-perfil-unna-studio/' style='font-weight:bold;color:#8d7e6f;'>mi perfil</a>
                             </div>
 
                             </div>
                         </div>
                     </div>
                     <script language='javascript'>
-                        var modalShowSuccess = new bootstrap.Modal(document.getElementById('registroexitoso'), {});
+                        var modalShowSuccess = new bootstrap.Modal(document.getElementById('registroexitoso2'), {});
                         document.onreadystatechange = function () {
                             modalShowSuccess.show();
                         };
