@@ -45,28 +45,28 @@ if(!defined('WPINC')){
 
             switch ($week) {
                 case 1:
-                    $week = "Lunes";
+                    $week = "lunes";
                     break;
                 case 2:
-                    $week = "Martes";
+                    $week = "martes";
                     break;
                 case 3:
-                    $week = "Miércoles";
+                    $week = "miércoles";
                     break;
                 case 4:
-                    $week = "Jueves";
+                    $week = "jueves";
                     break;
                 case 5:
-                    $week = "Viernes";
+                    $week = "viernes";
                     break;
                 case 6:
-                    $week = "Sábado";
+                    $week = "sábado";
                     break;
                 case 7:
-                    $week = "Domingo";
+                    $week = "domingo";
                     break;
                 default:
-                    $week = "Algún día";
+                    $week = "algún día";
                     break;
             }
 
@@ -81,43 +81,43 @@ if(!defined('WPINC')){
         
             switch ($month) {
                 case 1:
-                    $month = "Enero";
+                    $month = "enero";
                     break;
                 case 2:
-                    $month = "Febrero";
+                    $month = "febrero";
                     break;
                 case 3:
-                    $month = "Marzo";
+                    $month = "marzo";
                     break;
                 case 4:
-                    $month = "Abril";
+                    $month = "abril";
                     break;
                 case 5:
-                    $month = "Mayo";
+                    $month = "mayo";
                     break;
                 case 6:
-                    $month = "Junio";
+                    $month = "junio";
                     break;
                 case 7:
-                    $month = "Julio";
+                    $month = "julio";
                     break;
                 case 8:
-                    $month = "Agosto";
+                    $month = "agosto";
                     break;
                 case 9:
-                    $month = "Septiembre";
+                    $month = "septiembre";
                     break;
                 case 10:
-                    $month = "Octubre";
+                    $month = "octubre";
                     break;
                 case 11:
-                    $month = "Noviembre";
+                    $month = "noviembre";
                     break;
                 case 12:
-                    $month = "Diciembre";
+                    $month = "diciembre";
                     break;
                 default:
-                    $month = "Algún mes";
+                    $month = "algún mes";
                     break;
 
                     
@@ -191,7 +191,7 @@ if(!defined('WPINC')){
                 }
 
 
-                echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
+                echo '<script language="javascript">alert("te has registrado con éxito");</script>';
             }
 
             public function searchRegister($eventid)
@@ -218,15 +218,44 @@ if(!defined('WPINC')){
             global $wpdb;
             $userId = get_current_user_id();
             $current_user = wp_get_current_user()->id;
+            $url = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+            $redirect = 0;
 
             $actualClass = new shortcodeOverview;
+
+            if(isset($_GET['msg']) && $_GET['msg'] == 'success'){
+                echo "
+                <div class='modal' id='registroexitoso'>
+                    <div class='modal-dialog'>
+                        <div class='modal-content'>
+
+                        <!-- Modal Header -->
+                        <div class='modal-header'>
+                            <h4 class='modal-title'>se ha reservado tu clase</h4>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class='modal-body'>
+                            Puedes ver tu registro y entrar a la clase en la página de tu perfil.
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+                <script language='javascript'>
+                    var modalShowSuccess = new bootstrap.Modal(document.getElementById('registroexitoso'), {});
+                    document.onreadystatechange = function () {
+                        modalShowSuccess.show();
+                    };
+                </script>";
+            }
 
 
             /*POST INSCRIPCION*/
             if (isset($_POST['inscribirse'])) {
 
                 $idins = $_POST['inscripcionid'];
-                $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
                 if($actualClass->searchRegister($idins) != 1){
 
@@ -244,10 +273,9 @@ if(!defined('WPINC')){
                     }
 
                     try {
+
                         $wpdb->insert($tabla_register, $data, $format);
-                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
-                        sleep(5);
-                        header("Location: $url");
+                        echo '<script language="javascript">location.href ="'.$url.'?msg=success";</script>';     
             
                     } catch (Exception $e) {
 
@@ -258,7 +286,10 @@ if(!defined('WPINC')){
                     echo '<script language="javascript">alert("Ya te has inscrito a este evento");</script>';
                 }
 
+                /*header("Location: $url");*/
+
             }
+
         /*-----------------------------*/
 
             $html = "";
@@ -332,7 +363,7 @@ if(!defined('WPINC')){
                     }
                     
 
-                    if($datestart >= $today){
+                    if($dateend >= $today){
 
                         $html .= "
                                         
@@ -343,14 +374,14 @@ if(!defined('WPINC')){
                                     <h1 style='font-size:30px;line-height:19px;'>$week</h1>
                                     ";
 
-                                if ($week != 'Hoy') {
+                                if ($week != 'hoy') {
                                     $html .= "<p style='display:flex;color:#8A7E71;font-size:11px;line-height:0;'>$day de $month</p>";
                                 }
 
                         $html .= "
                                 </a>
                                 <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour</h1>
-                                <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre</p>
+                                <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre <span style='color:lightgrey;font-size:10pt;'><i class='fa-solid fa-arrow-up-right-from-square'></i></span></p>
                                 ";
                         if($nameInstructor){
                             $html .="
@@ -371,7 +402,7 @@ if(!defined('WPINC')){
 
                                         if ($checkRegister == 1) {
                                             $html .= "
-                                                        <a href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
+                                                        <a href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas;color:#8A7E71;'>
                                                            Entrar a la sesión
                                                         </a>
                                                 ";
@@ -459,7 +490,7 @@ if(!defined('WPINC')){
                                             <div class='d-flex flex-column'>
                                                 <h1 style='font-size:25pt'>$nombreModal</h1>
                                                 <p style='line-height:12pt;'>$week $day de $month</p>
-                                                <p style='line-height:12pt;'>$hourModal</p>
+                                                <p style='line-height:12pt;'>$hourModal <span style='font-size:9pt;color:grey;'>(hora CDMX)</span></p>
                                             </div>
                                     ";
 
@@ -595,6 +626,8 @@ if(!defined('WPINC')){
                                     </div>
                                 </div>
                             </div>
+
+                            
             ";
             }
         }

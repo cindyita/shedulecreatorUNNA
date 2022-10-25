@@ -222,6 +222,34 @@ if(!defined('WPINC')){
 
         $actualClass = new shortcodeOverview;
 
+        if (isset($_GET['msgm']) && $_GET['msgm'] == 'success') {
+            echo "
+                <div class='modal' id='registroexitoso'>
+                    <div class='modal-dialog'>
+                        <div class='modal-content'>
+
+                        <!-- Modal Header -->
+                        <div class='modal-header'>
+                            <h4 class='modal-title'>se ha reservado tu clase</h4>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class='modal-body'>
+                            Puedes ver tu registro y entrar a la clase en la página de tu perfil.
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+                <script language='javascript'>
+                    var modalShowSuccess = new bootstrap.Modal(document.getElementById('registroexitoso'), {});
+                    document.onreadystatechange = function () {
+                        modalShowSuccess.show();
+                    };
+                </script>";
+        }
+
 
         /*POST INSCRIPCION*/
         if (isset($_POST['inscribirse'])) {
@@ -246,9 +274,8 @@ if(!defined('WPINC')){
 
                 try {
                     $wpdb->insert($tabla_register, $data, $format);
-                    echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
-                    sleep(5);
-                    header("Location: $url");
+                    echo '<script language="javascript">location.href ="' . $url . '?msgm=success";</script>';
+                    //header("Location: $url");
                 } catch (Exception $e) {
 
                     echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
@@ -323,7 +350,7 @@ if(!defined('WPINC')){
 
 
                 if ($date == $todayFormat) {
-                    $week = 'Hoy';
+                    $week = 'hoy';
                 }
 
 
@@ -344,7 +371,7 @@ if(!defined('WPINC')){
 
                     $html .= "
                                 </a>
-                                <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour</h1>
+                                <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour <span style='font-size:9pt;color:grey;'>(hora CDMX)</span></h1>
                                 <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre</p>
                                 ";
                     if ($nameInstructor) {

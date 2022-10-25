@@ -432,7 +432,7 @@ if (empty($list_register)) {
 
                 $duracion = $fechahorainicio->diff($fechahorafin);
 
-                if ($fechahorainicio >= $today) {
+                if ($fechahorafin >= $today) {
             ?>
 
                     <tr>

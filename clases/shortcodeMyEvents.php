@@ -9,28 +9,28 @@
 
         switch ($week) {
             case 1:
-                $week = "Lunes";
+                $week = "lunes";
                 break;
             case 2:
-                $week = "Martes";
+                $week = "martes";
                 break;
             case 3:
-                $week = "Miércoles";
+                $week = "miércoles";
                 break;
             case 4:
-                $week = "Jueves";
+                $week = "jueves";
                 break;
             case 5:
-                $week = "Viernes";
+                $week = "viernes";
                 break;
             case 6:
-                $week = "Sábado";
+                $week = "sábado";
                 break;
             case 7:
-                $week = "Domingo";
+                $week = "domingo";
                 break;
             default:
-                $week = "Algún día";
+                $week = "algún día";
                 break;
         }
 
@@ -44,43 +44,43 @@
 
         switch ($month) {
             case 1:
-                $month = "Enero";
+                $month = "enero";
                 break;
             case 2:
-                $month = "Febrero";
+                $month = "febrero";
                 break;
             case 3:
-                $month = "Marzo";
+                $month = "marzo";
                 break;
             case 4:
-                $month = "Abril";
+                $month = "abril";
                 break;
             case 5:
-                $month = "Mayo";
+                $month = "mayo";
                 break;
             case 6:
-                $month = "Junio";
+                $month = "junio";
                 break;
             case 7:
-                $month = "Julio";
+                $month = "julio";
                 break;
             case 8:
-                $month = "Agosto";
+                $month = "agosto";
                 break;
             case 9:
-                $month = "Septiembre";
+                $month = "septiembre";
                 break;
             case 10:
-                $month = "Octubre";
+                $month = "octubre";
                 break;
             case 11:
-                $month = "Noviembre";
+                $month = "noviembre";
                 break;
             case 12:
-                $month = "Diciembre";
+                $month = "diciembre";
                 break;
             default:
-                $month = "Algún mes";
+                $month = "algún mes";
                 break;
         }
 
@@ -169,6 +169,7 @@
 
         public function eventFromOpen($e,$i,$r){
 
+            global $wpdb;
             $actualClass = new shortcodeEvent;
             $userId = get_current_user_id();
 
@@ -180,6 +181,26 @@
             $linkevent = null;
             $linkcalendar = null;
             $instructorid = null;
+
+            $today = new DateTime();
+
+            $url = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+            /*POST BORRAR INSCRIPCION*/
+            if (isset($_POST['deleteinscripcion'])) {
+                $id = $_POST['eventid'];
+                $registerid = 0;
+
+                foreach ($r as $register) {
+                    if($register['userid'] == $userId && $register['eventid'] == $id){
+                        $registerid = $register['registerid'];
+                    }
+                }
+
+                $tabla_registrations = "{$wpdb->prefix}shedule_registrations";
+                $wpdb->delete($tabla_registrations, array('registerid' => $registerid));
+                header("Location: $url");
+            }
 
             $html = "
                 <script src='https://kit.fontawesome.com/e0df5df9e9.js' crossorigin='anonymous'></script>
@@ -199,9 +220,9 @@
 
             }else{
 
-                foreach ($r as $key => $register) {
-
-                        foreach ($e as $key => $events) {
+                foreach ($r as $register) {
+                    
+                        foreach ($e as $events) {
                             if($events['eventoid'] == $register['eventid']){
                                 $eventid = $events['eventoid'];
                                 $nombreEvento = $events['nombre'];
@@ -212,21 +233,22 @@
                                 $descripcion = $events['descripcion'];
                                 $linkevent = $events['linkevent'];
                                 $linkcalendar = $events['linkcalendar'];
-                                $instructorid = $events['instructorIdAssign'];
-                            }
+                                $instructorid = $events['instructorIdAssign'];      
 
-                            $datestart =  new DateTime($fechahorainicio);
-                            $dateend =  new DateTime($fechahorafin);
-                            $hour = date("g:s a", strtotime($fechahorainicio));
-                            $day = $datestart->format('d');
-                            $month = $actualClass->converterMonth($datestart);
-                            $week = $actualClass->converterWeek($datestart);
-                            $duracion = $datestart->diff($dateend);
-                            $duracion = $actualClass->converterDuration($duracion);
-                        }
+                                $datestart =  new DateTime($fechahorainicio);
+                                $dateend =  new DateTime($fechahorafin);
+                                $hour = date("g:s a", strtotime($fechahorainicio));
+                                $day = $datestart->format('d');
+                                $month = $actualClass->converterMonth($datestart);
+                                $week = $actualClass->converterWeek($datestart);
+                                $duracion = $datestart->diff($dateend);
+                                $duracion = $actualClass->converterDuration($duracion);
+
+                        if ($dateend >= $today) {
+                            
 
                     $html .= "
-                            <div class='card m-3 d-none d-lg-block' style='border-radius:10px;'>
+                            <div class='cardClase card m-3 d-none d-lg-block' style='border-radius:10px;'>
 
                                 <div class='card-body p-4' style='position:relative;'>
                                     <a data-bs-toggle='modal' data-bs-target='#modal$eventid' style='cursor:pointer;'>
@@ -240,19 +262,26 @@
                                             <a data-bs-toggle='modal' data-bs-target='#modal$eventid'>
                                                 <label style='cursor:pointer;'>$nombreEvento</label>
                                             </a>
-                                            <span class='text-muted small'>$week $day de $month a las $hour | $duracion</span>
+                                            <span class='text-muted small'>$week $day de $month a las $hour <span style='font-size:9pt;color:grey;'>(hora CDMX)</span> | $duracion</span>
                                         </div>
-                                        <div class='d-flex gap-2'>
+                                        <div class='d-flex gap-2 align-items-center'>
                                             <a href='$linkevent'>
                                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Entrar</button>
+                                            </a>                                    
+                                            <a data-bs-toggle='modal' data-bs-target='#eliminarEventoLista$eventid' class='eliminarClase text-danger mt-2'>
+                                                <i style='font-size:18pt;' class='fa-solid fa-circle-xmark'></i>
                                             </a>
                                         </diV>
                                     </div>
                                 </div>
 
                             </div>
+                            <style>
+                                .cardClase .eliminarClase { display:none;cursor:pointer; }
+                                .cardClase:hover .eliminarClase { display:block; }
+                            </style>
 
-                            <div class='card m-3 d-block d-lg-none'>
+                            <div class='cardClaseM card m-3 d-block d-lg-none'>
 
                                 <div class='card-body p-4' style='position:relative;'>
                                     <a data-bs-toggle='modal' data-bs-target='#modal$eventid' style='cursor:pointer;'>
@@ -265,9 +294,12 @@
                                             </a>
                                             <span class='text-muted text-center small'>$week $day de $month a las $hour | $duracion</span>
                                         </div>
-                                        <div class='d-flex gap-2'>
+                                        <div class='d-flex gap-2 align-items-center'>
                                             <a href='$imageLinkevento'>
                                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Entrar</button>
+                                            </a>
+                                            <a data-bs-toggle='modal' data-bs-target='#eliminarEventoLista$eventid' class='eliminarClaseM text-danger'>
+                                                <i class='fa-solid fa-circle-xmark'></i>
                                             </a>
                                         </diV>
                                     </div>
@@ -338,8 +370,42 @@
                                 </div>
                             </div>
             ";
+            /*modal eliminar*/ 
+            $html .= "
+                <div class='modal' id='eliminarEventoLista$eventid'>
+                    <div class='modal-dialog'>
+                        <div class='modal-content'>
 
-                }
+                        <!-- Modal Header -->
+                        <div class='modal-header'>
+                            <h4 class='modal-title'>Eliminar inscripción</h4>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class='modal-body'>
+                            <div class='d-flex flex-column w-100 align-items-center'>
+                                <span>
+                                    ¿Te gustaría eliminar tu inscripción al evento <span class='text-danger'>$nombreEvento</span>?
+                                </span>
+                                <br>
+                                <form method='post'>
+                                    <input type='hidden' id='eventid' name='eventid' value='$eventid'>
+                                    <button type='submit' id='deleteinscripcion' name='deleteinscripcion' class='btn btn-danger'>eliminar</button>
+                                    <span class='text-muted'> *Puede tardar un rato</span>
+                                </form>
+                            </div> 
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            ";
+
+                            } /* fin IF date*/
+                        } /* fin IF event = register */
+                    } /*fin FOR events*/
+                } /*fin FOR registers*/
             }
                 
             return $html;

@@ -66,6 +66,34 @@
             $actualClass = new shortcodeNextSession;
             $checkRegister = $actualClass->searchRegister($id);
 
+            if (isset($_GET['msgnext']) && $_GET['msgnext'] == 'success') {
+                echo "
+                    <div class='modal' id='registroexitoso'>
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+
+                            <!-- Modal Header -->
+                            <div class='modal-header'>
+                                <h4 class='modal-title'>se ha reservado tu clase</h4>
+                                <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class='modal-body'>
+                                Puedes ver tu registro y entrar a la clase en la página de tu perfil.
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <script language='javascript'>
+                        var modalShowSuccess = new bootstrap.Modal(document.getElementById('registroexitoso'), {});
+                        document.onreadystatechange = function () {
+                            modalShowSuccess.show();
+                        };
+                    </script>";
+            }
+
             /*POST INSCRIPCION*/
             if (isset($_POST['inscribirse'])) {
 
@@ -89,9 +117,8 @@
 
                     try {
                         $wpdb->insert($tabla_register, $data, $format);
-                        echo '<script language="javascript">alert("Te has registrado con éxito");</script>';
-                        sleep(5);
-                        header("Location: $url");
+                        echo '<script language="javascript">location.href ="' . $url . '?msgnext=success";</script>';
+                        /*header("Location: $url");*/
                     } catch (Exception $e) {
 
                         echo '<script language="javascript">alert("ERROR: ' . $e->getMessage() . '");</script>';
@@ -104,74 +131,74 @@
 
             switch ($week) {
                 case 1:
-                    $week = "Lunes";
+                    $week = "lunes";
                     break;
                 case 2:
-                    $week = "Martes";
+                    $week = "martes";
                     break;
                 case 3:
-                    $week = "Miércoles";
+                    $week = "miércoles";
                     break;
                 case 4:
-                    $week = "Jueves";
+                    $week = "jueves";
                     break;
                 case 5:
-                    $week = "Viernes";
+                    $week = "viernes";
                     break;
                 case 6:
-                    $week = "Sábado";
+                    $week = "sábado";
                     break;
                 case 7:
-                    $week = "Domingo";
+                    $week = "domingo";
                     break;
                 default:
-                    $week = "Algún día";
+                    $week = "algún día";
                     break;
             }
 
             if ($todaydmy == $date) {
-                $week = "Hoy";
+                $week = "hoy";
             }
 
             switch ($month) {
                 case 1:
-                    $month = "Enero";
+                    $month = "enero";
                     break;
                 case 2:
-                    $month = "Febrero";
+                    $month = "febrero";
                     break;
                 case 3:
-                    $month = "Marzo";
+                    $month = "marzo";
                     break;
                 case 4:
-                    $month = "Abril";
+                    $month = "abril";
                     break;
                 case 5:
-                    $month = "Mayo";
+                    $month = "mayo";
                     break;
                 case 6:
-                    $month = "Junio";
+                    $month = "junio";
                     break;
                 case 7:
-                    $month = "Julio";
+                    $month = "julio";
                     break;
                 case 8:
-                    $month = "Agosto";
+                    $month = "agosto";
                     break;
                 case 9:
-                    $month = "Septiembre";
+                    $month = "septiembre";
                     break;
                 case 10:
-                    $month = "Octubre";
+                    $month = "octubre";
                     break;
                 case 11:
-                    $month = "Noviembre";
+                    $month = "noviembre";
                     break;
                 case 12:
-                    $month = "Diciembre";
+                    $month = "diciembre";
                     break;
                 default:
-                    $month = "Algún mes";
+                    $month = "algún mes";
                     break;
             }
 
@@ -199,7 +226,7 @@
                             <h1 style='font-size:31px;color:#2B2B2B;'>$nombre</h1>
                             <div>
 
-                            <p style='line-hight:5pt;color:#2B2B2B;'>$week $day de $month <br> $hour</p>
+                            <p style='line-hight:5pt;color:#2B2B2B;'>$week $day de $month <br> $hour <span style='font-size:9pt;color:grey;'>(hora CDMX)</span></p>
  
                             </div>
 
@@ -210,7 +237,7 @@
 
                                 if ($checkRegister == 1) {
                                     $html .= "
-                                                <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas'>
+                                                <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='$linkevent' style='font-style: italic;font-size:15pt;font-family:athelas;color:#8A7E71;'>
                                                     Entrar a la sesión
                                                 </a>
                                         ";
@@ -238,8 +265,8 @@
                                 }
                             } elseif ($current_user == 0) {
                                 $html .= "
-                                            <a class='w-xs-100 w-sm-100 w-md-100 w-lg-50 w-xl-50' href='https://somosunna.com/unna-studio/'>
-                                                <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
+                                            <a class='w-50' href='https://somosunna.com/unna-studio/'>
+                                                <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>   
                                             </a>
                                         
                                     ";
