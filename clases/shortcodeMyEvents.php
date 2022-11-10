@@ -137,7 +137,9 @@
             if(empty($data)){
                 $data = array();
             }
+            
             return $data;
+            
         }
 
         public function getInstructors(){
@@ -150,7 +152,9 @@
             if (empty($data)) {
                 $data = array();
             }
+            
             return $data;
+            
         }
         public function getRegisters($userid) {
 
@@ -163,7 +167,9 @@
             if (empty($data)) {
                 $data = array();
             }
+            
             return $data;
+            
 
         }
 
@@ -212,7 +218,7 @@
 
             $count = 0;
 
-            if(!$e){
+            if(!$r){
 
             $html .= "
                     <div class='w-100 p-4 d-flex justify-content-center'>
@@ -225,7 +231,9 @@
                 foreach ($r as $register) {
                     
                         foreach ($e as $events) {
+
                             if($events['eventoid'] == $register['eventid']){
+                                
                                 $eventid = $events['eventoid'];
                                 $nombreEvento = $events['nombre'];
                                 $imageLinkevento = $events['imageLink'];

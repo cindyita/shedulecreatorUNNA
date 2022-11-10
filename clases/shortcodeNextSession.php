@@ -12,8 +12,8 @@
             if(empty($data)){
                 $data = array();
             }
-
-            return $data[0];
+                return $data;
+            
         }
 
         public function getInstructors($id){
@@ -25,8 +25,11 @@
 
             if (empty($data)) {
                 $data = array();
+                return $data;
+            } else {
+                return $data[0];
             }
-            return $data[0];
+            
         }
 
         public function searchRegister($eventid)
@@ -49,7 +52,31 @@
             return $return;
         }
 
-        public function eventFromOpen($id,$nombre,$imageLink,$fechahorainicio,$fechahorafin,$nombreInstructor,$descripcion,$linkevent,$linkcalendar,$timestamp){
+        public function eventFromOpen($e,$nombreInstructor){
+
+            if($e){
+                $id = $e['eventoid'];
+                $nombre = $e['nombre'];
+                $imageLink = $e['imageLink'];
+                $fechahorainicio = $e['fechahorainicio'];
+                $fechahorafin = $e['fechahorafin'];
+                $instructorIdAssign = $e['instructorIdAssign'];
+                $descripcion = $e['descripcion'];
+                $linkevent = $e['linkevent'];
+                $timestamp = $e['timestamp'];
+                $linkcalendar = $e['linkcalendar'];
+            }else{
+                $id = "";
+                $nombre = "";
+                $imageLink = "";
+                $fechahorainicio = "";
+                $fechahorafin = "";
+                $instructorIdAssign = "";
+                $descripcion = "";
+                $linkevent = "";
+                $timestamp = "";
+                $linkcalendar = "";
+            }
 
             global $wpdb;
 
@@ -293,22 +320,17 @@
 
             $e = $this->getEvents();
 
-            $id = $e['eventoid'];
-            $nombre = $e['nombre'];
-            $imageLink = $e['imageLink'];
-            $fechahorainicio = $e['fechahorainicio'];
-            $fechahorafin = $e['fechahorafin'];
-            $instructorIdAssign = $e['instructorIdAssign'];
-            $descripcion = $e['descripcion'];
-            $linkevent = $e['linkevent'];
-            $timestamp = $e['timestamp'];
-            $linkcalendar = $e['linkcalendar'];
+            if($e){
+                $instructorIdAssign = $e['instructorIdAssign'];
+                $i = $this->getInstructors($instructorIdAssign);
+                $nombreInstructor = $i['nombre'];
+            }else{
+                $instructorIdAssign = "";
+                $nombreInstructor = "";
+            }
 
-            $i = $this->getInstructors($instructorIdAssign);
 
-            $nombreInstructor = $i['nombre'];
-
-            $html = $this->eventFromOpen($id, $nombre, $imageLink, $fechahorainicio, $fechahorafin, $nombreInstructor, $descripcion, $linkevent,$linkcalendar, $timestamp);
+            $html = $this->eventFromOpen($e, $nombreInstructor);
             $html .= $this->eventFromClose();
 
             return $html;

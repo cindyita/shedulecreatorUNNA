@@ -251,7 +251,6 @@ if (isset($_POST['editinstructor'])) {
 
 if (isset($_POST['exportdata'])) {
 
-
     $registers = $wpdb->get_results(" SELECT * FROM $tabla_register", ARRAY_A);
     $events = $wpdb->get_results(" SELECT * FROM $tabla_shedule", ARRAY_A);
     $instructors = $wpdb->get_results(" SELECT * FROM $tabla_instructor", ARRAY_A);
@@ -1666,6 +1665,14 @@ if (empty($list_register)) {
                 </td>
                 <td>
                     [SH_MY_EVENTS]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Eventos e inscritos de un instructor
+                </td>
+                <td>
+                    [SH_INSTRUCTOR_EVENTS id='{ID FROM INSTRUCTOR}'] Example: [SH_INSTRUCTOR_EVENTS id='2']
                 </td>
             </tr>
         </tbody>

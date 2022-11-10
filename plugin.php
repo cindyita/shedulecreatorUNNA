@@ -24,6 +24,7 @@ require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeNextSession.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverview.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeOverviewMobile.php';
 require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeMyEvents.php';
+require_once SHEDULER_PLUGIN_DIR . '/clases/shortcodeInstructorEvents.php';
 require_once SHEDULER_PLUGIN_DIR . '/admin/register_manager.php';
 
 $principal = new principal;
@@ -49,7 +50,6 @@ $bar->add_menu(array(
 
 }
 
-
 add_action("admin_menu", "createmenu");
 
 function createmenu()
@@ -67,7 +67,7 @@ plugin_dir_url(__FILE__) . 'admin/img/shedule.png', //icon
 '3' //position
 );
 
-
+/*
 add_submenu_page(
 plugin_dir_path(__FILE__) . 'admin/list_shedule.php', //parent slug
 "Registers manager", //titulo pagina
@@ -76,8 +76,10 @@ plugin_dir_path(__FILE__) . 'admin/list_shedule.php', //parent slug
 "sp_menu_ajustes", //nombre
 "registersManager" //funcion
 );
+*/
 
 }
+
 
 // Enqueu script
 
@@ -225,5 +227,15 @@ function showMyEvents()
 }
 
 add_shortcode("SH_MY_EVENTS", "showMyEvents");
+
+function showInstructorEvents($atts)
+{
+    $_shortcode = new shortcodeInstructorEvents;
+    $id = $atts['id'];
+    $html = $_shortcode->showInstructorEvents($id);
+    return $html;
+}
+
+add_shortcode("SH_INSTRUCTOR_EVENTS", "showInstructorEvents");
 
 ?>
