@@ -328,18 +328,18 @@
                                 }
                             } elseif ($userId == 0) {
                                 $html .= "
-                                            <a href='https://somosunna.com/unna-studio/'>
+                                            <a href='https://somosunna.com/unna-studio/#pricing'>
                                                 <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                             </a>
                                                 
                                             ";
                             }
-                        /*-----------------------*/
+                        /*-----------BOTON AGREGAR A CALENDARIO------------
                         $html .= "
                             <a href='$linkcalendar'>
                                 <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
                             </a>
-                         ";
+                         ";*/
                         }else{
                             $html .= "
                                 <a>

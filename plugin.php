@@ -2,9 +2,9 @@
 /*
 Plugin Name: Shedule creator
 Description:  Creador de itinerarios y eventos: Profesores, inscripciones y más.
-Author: Cindy ita
-Author URL: https://www.cindyita.com
-Version: BETA 1.7.3
+Author: Lar Creative Lab
+Author URL: https://larestudiocreativo.com
+Version: BETA 1.7.4
 Text Domain: shedule-creator-by-cindyita
 */
 
@@ -58,7 +58,7 @@ function createmenu()
 if (!current_user_can("manage_options")) return;
 
 add_menu_page(
-'Creador de itinerario UNNA', //titulo de la pagina
+'Shedule Creator', //titulo de la pagina
 'Shedule creator', // titulo del menu
 'manage_options', //capability
 plugin_dir_path(__FILE__) . 'admin/list_shedule.php', //slug

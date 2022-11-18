@@ -381,7 +381,7 @@ if(!defined('WPINC')){
                         $html .= "
                                 </a>
                                 <h1 style='color:#8A7E71;font-size:21pt;margin-top:30px;'>$hour</h1>
-                                <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modal$id'>$nombre <span style='color:lightgrey;font-size:10pt;'><i class='fa-solid fa-arrow-up-right-from-square'></i></span></p>
+                                <p style='font-size:13pt;cursor:pointer;line-height:14pt;height:60px;padding-top:5px;' data-bs-toggle='modal' data-bs-target='#modalEVENT$id'>$nombre <span style='color:lightgrey;font-size:10pt;'><i class='fa-solid fa-arrow-up-right-from-square'></i></span></p>
                                 ";
                         if($nameInstructor){
                             $html .="
@@ -430,7 +430,7 @@ if(!defined('WPINC')){
                                         }
                                 }elseif($current_user == 0){
                                     $html .= "
-                                                <a href='https://somosunna.com/unna-studio/'>
+                                                <a href='https://somosunna.com/unna-studio/#pricing'>
                                                     <button class='btn' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>
                                                 </a>
                                             
@@ -474,8 +474,8 @@ if(!defined('WPINC')){
 
 
             $html .= "
-                            <div class='modal' id='modal$idmodal'>
-                                <div class='modal-dialog modal-dialog-centered modal-lg'>
+                            <div class='modal' id='modalEVENT$idmodal'>
+                                <div class='modal-dialog modal-dialog-centered modal-xl'>
                                     <div class='modal-content' style='border-radius:0;'>
 
                                     <!-- Modal body -->
@@ -552,17 +552,20 @@ if(!defined('WPINC')){
                                     } elseif ($current_user == 0) {
                                         $html .= "
                                                             <a href='register'>
-                                                                <button class='btn w-75' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
+                                                                <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Iniciar sesión</button>
                                                             </a>
                                                                 
                                                             ";
                                     }
-
+                                        /*-----------BOTON AGREGAR A CALENDARIO------------
                                         $html .= "
 
                                                     <a href='$linkCalendarModal' class='ms-2'>
                                                         <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
                                                     </a>
+                                        ";
+                                        -------------------------------*/
+                                        $html .= "  
                                                 </div>
                                             </div>
                                             <br>

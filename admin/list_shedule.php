@@ -1679,5 +1679,9 @@ if (empty($list_register)) {
     </table>
 
     <br><br><br>
+    <div class="text-muted">
+        <h1 class="wp-heading-inline">Créditos</h1>
+        <p>Plugin creado por <a href="https://larestudiocreativo.com" style="text-decoration:none;">Lar Estudio Creativo</a> para <a href="https://somosunna.com" style="text-decoration:none;">somos UNNA</a></p>
+    </div>
 </div>
 <?php

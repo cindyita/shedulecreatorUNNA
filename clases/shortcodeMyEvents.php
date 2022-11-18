@@ -320,7 +320,7 @@
 
                 $html .= "
                             <div class='modal' id='modal$eventid'>
-                                <div class='modal-dialog modal-dialog-centered modal-lg'>
+                                <div class='modal-dialog modal-dialog-centered modal-xl'>
                                     <div class='modal-content' style='border-radius:0;'>
 
                                     <!-- Modal body -->
@@ -366,9 +366,15 @@
                                                 <a href='$linkevent'>
                                                     <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>Entrar</button>
                                                 </a>
+                                                ";
+                           /*----------BOTON AGREGAR A CALENDARIO------------
+                            $html .= "
                                                 <a href='$linkcalendar' class='ms-2'>
                                                     <button class='btn' style='border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>agregar a calendario</button>
                                                 </a>
+                                                ";
+                            */
+                            $html .= "
                                             </div>
                                             <br>
                                         </div>

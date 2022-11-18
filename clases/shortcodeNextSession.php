@@ -11,8 +11,9 @@
 
             if(empty($data)){
                 $data = array();
-            }
                 return $data;
+            }
+                return $data[0];
             
         }
 
@@ -52,7 +53,7 @@
             return $return;
         }
 
-        public function eventFromOpen($e,$nombreInstructor){
+        public function eventFromOpen($e){
 
             if($e){
                 $id = $e['eventoid'];
@@ -232,7 +233,7 @@
                 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>
                 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
             ";
-            if(!$id){
+            if(!$e){
             $html .= "
                 <div class='wrap d-flex p-4 w-100 justify-content-center align-items-center' style='padding:0 10px;background-color:#f7f6f5;'>
                     <a>No hay eventos próximos ¡Revisa más tarde!</a>
@@ -290,17 +291,19 @@
                                 }
                             } elseif ($current_user == 0) {
                                 $html .= "
-                                            <a class='w-50' href='https://somosunna.com/unna-studio/'>
+                                            <a class='w-50' href='https://somosunna.com/unna-studio/#pricing'>
                                                 <button class='btn w-100' style='display:block;border-radius:23px;background-color:black;color:#EFEDE8;padding 0;border:0;font-size:12pt;'>inscribirme</button>   
                                             </a>
                                         
                                     ";
                             }
-                            /*------------------------------*/    
+                            /*----------BOTON AGREGAR A CALENDARIO-------------------    
                             $html .= "     
                                 <a href='$linkcalendar' class='w-50'>
                                     <button class='btn w-100'style='border-radius:20px;background-color:black;color:#EFEDE8;padding 0 8px;border:0;'>agregar a calendario</button>
-                                </a>
+                                </a> ";
+                            */
+                            $html .= " 
                             </div>
                         </div>
                     </div>
@@ -320,17 +323,8 @@
 
             $e = $this->getEvents();
 
-            if($e){
-                $instructorIdAssign = $e['instructorIdAssign'];
-                $i = $this->getInstructors($instructorIdAssign);
-                $nombreInstructor = $i['nombre'];
-            }else{
-                $instructorIdAssign = "";
-                $nombreInstructor = "";
-            }
 
-
-            $html = $this->eventFromOpen($e, $nombreInstructor);
+            $html = $this->eventFromOpen($e);
             $html .= $this->eventFromClose();
 
             return $html;
