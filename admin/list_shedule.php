@@ -332,6 +332,58 @@ if (isset($_POST['exportdata'])) {
     <strong>éxito!</strong> Se han exportado los datos</div>';
 }
 
+if (isset($_POST['sendEventEmail'])) {
+        $destinatarioEvent = $_POST['destinatarioEvent'];
+        $asunto = $_POST['asunto'];
+        $content = $_POST['content'];
+
+        $destinatario = "";
+
+        $query3 = "SELECT * FROM $tabla_register";
+        global $list_register;
+        $list_register = $wpdb->get_results($query3, ARRAY_A);
+        if (empty($list_register)) {
+            $list_register = array();
+        }
+
+        foreach ($list_register as $registers) {
+
+            if ($registers['eventid'] == $destinatarioEvent) {
+
+                $user = new WP_User($registers['userid']);
+                $useremail = $user->user_email;
+
+                if($destinatario != ""){
+                    $destinatario .= ','.$useremail;
+                }else{
+                    $destinatario .= $useremail;
+                }
+            }
+
+        }
+
+        $to = $destinatario;
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+        $subject = $asunto;
+        $message =  $content;
+
+        try{
+            wp_mail( $to, $subject, $message, $headers );
+            
+        } catch (Exception $e) {
+
+            echo '<div id="error-alert" class="alert alert-danger alert-dismissible me-4 mt-4">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>ERROR</strong> ' . $e->getMessage() . '
+            </div>';
+        }
+
+        echo '<div id="success-alert" class="alert alert-success alert-dismissible me-4 mt-4">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>éxito!</strong> Se ha enviado el correo
+        </div>';
+    }
+
 $query = "SELECT * FROM $tabla_shedule";
 global $list_shedule;
 $list_shedule = $wpdb->get_results($query, ARRAY_A);
@@ -1677,6 +1729,79 @@ if (empty($list_register)) {
             </tr>
         </tbody>
     </table>
+    <br><br><br>
+    <!-------------EMAILS------------->
+    <?php 
+
+
+    ?>
+
+    <h1 class="wp-heading-inline">Enviador de emails</h1><hr>
+    <div class="emailsSender row">
+        <div class="col-12 col-lg-6">
+            <form method="post"><!---
+                <div class="my-3">
+                    <label for="destinatarioSelect" class="form-label">Tipo de destinatario:</label>
+                    <select class="form-select" id="destinatarioSelect" name="destinatarioSelect">
+                        <option>Todos los inscritos de un evento</option>
+                        
+                        <option>Todos los inscritos de los eventos de un instructor</option>
+                        <option>Todos los inscritos de todos los eventos</option>
+                    </select>
+                </div>-->
+                <div class="my-3">
+                    <label for="destinatarioEvent" class="form-label">Enviar a los inscritos del evento:</label>
+                    <select class="form-select" id="destinatarioEvent" name="destinatarioEvent">
+                    <?php 
+                    
+                    foreach ($list_shedule as $key => $value) {
+
+                        $eventoid = $value['eventoid'];
+                        $nombre = $value['nombre'];
+                        $fechahorafin = $value['fechahorafin'];
+                        $fechahorafin = new DateTime($fechahorafin);
+
+                        if ($fechahorafin >= $today){
+                    ?>
+                        <option value="<?php echo $eventoid; ?>"><?php echo $nombre; ?></option>
+                        <?php }else{ ?>
+                        <option value="<?php echo $eventoid; ?>"><?php echo $nombre; ?> [Caducado]</option>
+
+                        <?php } } ?>
+                    </select>
+                </div>
+                <!---
+                <div class="mb-3 mt-3">
+                    <label for="remitenteName" class="form-label">Remitente nombre:</label>
+                    <input type="text" class="form-control" id="remitenteName" placeholder="Ingresa el nombre del remitente" name="remitenteName">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="remitenteEmail" class="form-label">Remitente email:</label>
+                    <input type="email" class="form-control" id="remitenteEmail" placeholder="Ingresa el correo del remitente" name="remitenteEmail">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="copia" class="form-label">CC email:</label>
+                    <input type="email" class="form-control" id="copia" placeholder="Ingresa el correo para enviar copia" name="copia">
+                </div>
+                --->
+                <div class="mb-3 mt-3">
+                    <label for="asunto" class="form-label">Asunto:</label>
+                    <input type="text" class="form-control" id="asunto" placeholder="Ingresa el asunto" name="asunto">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="content">Contenido del mensaje: (HTML)</label>
+                    <textarea class="form-control" rows="5" id="content" name="content"></textarea>
+                </div>
+                <div class="mb-3 mt-3">
+                    <button class="btn btn-primary" id="sendEventEmail" name="sendEventEmail">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><hr>
+    
+
+    <!--------------------------------->
 
     <br><br><br>
     <div class="text-muted">
