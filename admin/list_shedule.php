@@ -331,11 +331,22 @@ if (isset($_POST['exportdata'])) {
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     <strong>éxito!</strong> Se han exportado los datos</div>';
 }
-
+/* CONFIGURACION DE SMTP
+add_action( 'phpmailer_init', 'mailer_config', 10, 1);
+function mailer_config(PHPMailer $mailer){
+  $mailer->IsSMTP();
+  $mailer->Host = "mail.telemar.it"; // your SMTP server
+  $mailer->Port = 25;
+  $mailer->SMTPDebug = 2; // write 0 if you don't want to see client/server communication in page
+  $mailer->CharSet  = "utf-8";
+}
+*/
 if (isset($_POST['sendEventEmail'])) {
         $destinatarioEvent = $_POST['destinatarioEvent'];
         $asunto = $_POST['asunto'];
         $content = $_POST['content'];
+        $remitenteName = $_POST['remitenteName'];
+        $remitenteEmail = $_POST['remitenteEmail'];
 
         $destinatario = "";
 
@@ -363,7 +374,8 @@ if (isset($_POST['sendEventEmail'])) {
         }
 
         $to = $destinatario;
-        $headers = array('Content-Type: text/html; charset=UTF-8');
+        $from = "From: ".$remitenteName." <".$remitenteEmail.">";
+        $headers = array('Content-Type: text/html; charset=UTF-8',$from);
         $subject = $asunto;
         $message =  $content;
 
@@ -1770,7 +1782,7 @@ if (empty($list_register)) {
                         <?php } } ?>
                     </select>
                 </div>
-                <!---
+                
                 <div class="mb-3 mt-3">
                     <label for="remitenteName" class="form-label">Remitente nombre:</label>
                     <input type="text" class="form-control" id="remitenteName" placeholder="Ingresa el nombre del remitente" name="remitenteName">
@@ -1778,7 +1790,7 @@ if (empty($list_register)) {
                 <div class="mb-3 mt-3">
                     <label for="remitenteEmail" class="form-label">Remitente email:</label>
                     <input type="email" class="form-control" id="remitenteEmail" placeholder="Ingresa el correo del remitente" name="remitenteEmail">
-                </div>
+                </div><!---
                 <div class="mb-3 mt-3">
                     <label for="copia" class="form-label">CC email:</label>
                     <input type="email" class="form-control" id="copia" placeholder="Ingresa el correo para enviar copia" name="copia">

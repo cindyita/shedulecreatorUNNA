@@ -4,7 +4,7 @@ Plugin Name: Shedule creator
 Description:  Creador de itinerarios y eventos: Profesores, inscripciones y más.
 Author: Lar Creative Lab
 Author URL: https://larestudiocreativo.com
-Version: BETA 1.7.4
+Version: BETA 1.7.5
 Text Domain: shedule-creator-by-cindyita
 */
 
